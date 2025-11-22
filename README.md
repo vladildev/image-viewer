@@ -5,18 +5,19 @@
 - [] EditorView
 - [] ThumnailView
 - [] Invoker
-- [] Manager
+- [-Vlad] Manager
 - [] Liste de commands
 - [] HomeController
-- [] Image
-- [] Perspective
+- [-Vlad] Image
+- [-Vlad] Perspective
 - [] EditorController
 - [] ThumbnailController
 - [] CommandHistory
 - [] CommandHistoryIterator
 - [] MementoHistory
-- [] Editor
-- [] EditorMemento
+- [-Vlad] Editor
+- [-Vlad] EditorMemento
+- [-Vlad] Memento
 - [] MementoHistoryIterator
 
 \* [] : TODO,  [-] : in progress, [x] : done
