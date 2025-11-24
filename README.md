@@ -1,7 +1,7 @@
 # image-viewer (LOG121)
 
 ## TODO*
-- [] HomeView
+- [-Felix] HomeView
 - [] EditorView
 - [] ThumnailView
 - [] Invoker
