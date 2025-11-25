@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.IOException;
 public class EditorView {
     private Stage stage;
     private EditorController controller;
+    private FileChooser fileChooser = new FileChooser();
     
 
     // =========== FXML COMPONENTS ===========
@@ -129,11 +131,16 @@ public class EditorView {
     
     @FXML
     public void handleImportImage(ActionEvent event) {
-        System.out.println("Button clicked!");
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            System.out.println("Importing image...");
-            controller.doImportImage("C:\\Users\\louca\\Downloads\\IMG_3645.jpeg");
+            fileChooser.setTitle("Open Image File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                controller.doImportImage(selectedFile.getPath());
+            }
         } else {
             System.out.println("Controller is null!");
         }
@@ -142,24 +149,47 @@ public class EditorView {
     @FXML
     public void handleSaveImage(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doSaveImage("path/to/save.jpg");
+            fileChooser.setTitle("Save Edited Image");
+
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "PNG Image", "*.png"
+            ));
+
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                controller.doSaveImage(file.getPath());
+            }
         }
     }
     
     @FXML
     public void handleImportConfig(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doLoadConfigFile("path/to/config.json");
+            fileChooser.setTitle("Open Configuration File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Json files", "*.json")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                controller.doLoadConfigFile(selectedFile.getPath());
+            }
         }
     }
     
     @FXML
     public void handleSaveConfig(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doSaveConfigFile("path/to/config.json");
+            fileChooser.setTitle("Save Configurations");
+
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "Json File", "*.json"
+            ));
+
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                controller.doSaveConfigFile(file.getPath());
+            }
         }
     }
     
