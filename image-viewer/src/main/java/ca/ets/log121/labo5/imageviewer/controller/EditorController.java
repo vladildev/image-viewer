@@ -14,11 +14,9 @@ public class EditorController implements Observer {
     }
 
     public void update(Observable o) {
-        if (o instanceof  Image && !view.getIsOpen() && Manager.getInstance().getEditor().getImage() != null) {
-            // view.show();
-        } else if (o instanceof Image){
+        if (o instanceof Image){
             view.setImage( ((Image) o).getPath() );
-        }else if (o instanceof Perspective){
+        } else if (o instanceof Perspective){
             Perspective p = (Perspective) o;
             // Appliquer le zoom avec les dimensions du crop
             view.zoomOnImage(p.getWidth(), p.getHeight());

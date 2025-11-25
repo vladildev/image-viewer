@@ -5,20 +5,30 @@ import ca.ets.log121.labo5.imageviewer.model.observer.Image;
 import ca.ets.log121.labo5.imageviewer.model.observer.Observable;
 import ca.ets.log121.labo5.imageviewer.model.observer.Observer;
 import ca.ets.log121.labo5.imageviewer.tools.command.ImportImageCommand;
+import ca.ets.log121.labo5.imageviewer.view.EditorView;
 import ca.ets.log121.labo5.imageviewer.view.HomeView;
+
+import java.io.IOException;
 
 public class HomeController implements Observer {
     HomeView homeView;
+    EditorView editorView;
 
-    public HomeController(HomeView view) {
-        this.homeView = view;
+    public HomeController(HomeView homeView, EditorView editorView) {
+        this.homeView = homeView;
+        this.editorView = editorView;
     }
 
     @Override
     public void update(Observable o) {
         if (o instanceof Image && Manager.getInstance().getEditor().getImage().getPath() != null) {
             Manager.getInstance().getEditor().getImage().detach(this);
-            homeView.getStage().close();
+
+            try {
+                editorView.show();  // <-- HERE is the correct place
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -9,8 +9,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            prefHeight="600.0" prefWidth="800.0"
-            fx:controller="ca.ets.log121.labo5.imageviewer.view.EditorView">
+            prefHeight="600.0" prefWidth="800.0">
     
     <!-- Barre d'outils à gauche -->
     <left>

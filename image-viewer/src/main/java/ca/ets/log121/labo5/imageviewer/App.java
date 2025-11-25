@@ -15,14 +15,14 @@ import java.io.IOException;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        HomeView homeView = new HomeView(stage);
-        HomeController homeController = new HomeController(homeView);
-        homeView.setHomeController(homeController);
-
         EditorView editorView = new EditorView(stage);
         EditorController editorController = new EditorController(editorView);
         editorView.setController(editorController);
-        
+
+        HomeView homeView = new HomeView(stage);
+        HomeController homeController = new HomeController(homeView, editorView);
+        homeView.setHomeController(homeController);
+
         // TODO edit thumbnail view and controller
         ThumbnailView thumbnailView = new ThumbnailView();
         ThumbnailController thumbnailController = new ThumbnailController();
