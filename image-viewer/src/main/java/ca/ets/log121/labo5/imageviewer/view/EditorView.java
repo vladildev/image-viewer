@@ -17,6 +17,7 @@ import java.io.IOException;
 public class EditorView {
     private Stage stage;
     private EditorController controller;
+    private boolean isOpen = false;
     
 
     // =========== FXML COMPONENTS ===========
@@ -39,6 +40,7 @@ public class EditorView {
         stage.setTitle("Éditeur d'images");
         stage.setScene(scene);
         stage.show();
+        isOpen = true;
     }
 
     public void setController(EditorController controller) {
@@ -100,7 +102,11 @@ public class EditorView {
         }
     }
 
+    // ============ GETTERS ============
 
+    public boolean getIsOpen() {
+        return isOpen;
+    }
 
 
 

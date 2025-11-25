@@ -1,17 +1,22 @@
 package ca.ets.log121.labo5.imageviewer.controller;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
 import ca.ets.log121.labo5.imageviewer.model.observer.*;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import ca.ets.log121.labo5.imageviewer.view.EditorView;
 
-public class EditorController implements Observer{
+import java.io.IOException;
+
+public class EditorController implements Observer {
     EditorView view;
     
     public EditorController(EditorView view) {
         this.view = view;
     }
 
-    public void update(Observable o){
-        if (o instanceof Image){
+    public void update(Observable o) {
+        if (o instanceof  Image && !view.getIsOpen() && Manager.getInstance().getEditor().getImage() != null) {
+            // view.show();
+        } else if (o instanceof Image){
             view.setImage( ((Image) o).getPath() );
         }else if (o instanceof Perspective){
             Perspective p = (Perspective) o;

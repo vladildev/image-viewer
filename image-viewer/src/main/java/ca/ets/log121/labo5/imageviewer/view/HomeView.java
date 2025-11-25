@@ -1,5 +1,9 @@
 package ca.ets.log121.labo5.imageviewer.view;
 
+import ca.ets.log121.labo5.imageviewer.controller.HomeController;
+import ca.ets.log121.labo5.imageviewer.tools.command.Command;
+import ca.ets.log121.labo5.imageviewer.tools.command.ImportImageCommand;
+import ca.ets.log121.labo5.imageviewer.tools.command.LoadConfigFileCommand;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,14 +15,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class HomeView {
-
+    private Command importImageCommand;
+    private HomeController homeController;
+    private final FileChooser fileChooser = new FileChooser();
     private Stage stage;
 
-    public void setStage(Stage stage) {
+    public HomeView(Stage stage) {
         this.stage = stage;
     }
-
-    private final FileChooser fileChooser = new FileChooser();
 
     @FXML
     protected void searchLocalFiles() throws IOException {
@@ -29,30 +33,28 @@ public class HomeView {
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            // call your method
-            display(selectedFile);
+            homeController.doImport(selectedFile.getPath());
         }
     }
 
-    private void display(File file) throws IOException {
-        // Load the next FXML
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("EditorView.fxml"));
+    public void show() throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/ca/ets/log121/labo5/imageviewer/home-view.fxml")
+        );
+        loader.setController(this);
         Parent root = loader.load();
+        Scene scene = new Scene(root, 400, 400);
+        stage.setTitle("Home Screen");
+        stage.setScene(scene);
+        stage.show();
+    }
 
-        // Give the image file to the next controller
-        EditorView view = loader.getController();
-        //view.setImage(file);
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
+    }
 
-        // Create NEW window
-        Stage editorStage = new Stage();
-        editorStage.setTitle("Image Viewer");
-        editorStage.setScene(new Scene(root));
-
-        // Show new window
-        editorStage.show();
-
-        // CLOSE original window
-        stage.close();
+    public Stage getStage() {
+        return stage;
     }
 }
 
