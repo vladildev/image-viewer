@@ -10,7 +10,7 @@
 - [] HomeController
 - [-Vlad] Image
 - [-Vlad] Perspective
-- [] EditorController
+- [-Loucas] EditorController
 - [] ThumbnailController
 - [-Loucas] CommandHistory
 - [] CommandHistoryIterator
