@@ -4,15 +4,15 @@
 - [-Felix] HomeView
 - [] EditorView
 - [] ThumnailView
-- [] Invoker
+- [-Loucas] Invoker
 - [-Vlad] Manager
-- [] Liste de commands
+- [-Loucas] Liste de commands
 - [] HomeController
 - [-Vlad] Image
 - [-Vlad] Perspective
 - [] EditorController
 - [] ThumbnailController
-- [] CommandHistory
+- [-Loucas] CommandHistory
 - [] CommandHistoryIterator
 - [] MementoHistory
 - [-Vlad] Editor
