@@ -1,6 +1,7 @@
 package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,6 +40,7 @@ public class EditorView {
         Parent root = loader.load();
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Éditeur d'images");
+        imageView = new ImageView(Manager.getInstance().getEditor().getImage().getPath());
         stage.setScene(scene);
         stage.show();
     }
