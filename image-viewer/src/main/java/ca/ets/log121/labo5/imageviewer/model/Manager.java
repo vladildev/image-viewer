@@ -15,8 +15,8 @@ public class Manager {
     private CommandHistory commandHistory;
 
     private Manager() {
-        Image image = new Image(800, 600);
-        Perspective perspective = new Perspective(800, 600, 0, 0);
+        Image image = new Image(3000, 3000);
+        Perspective perspective = new Perspective(3000, 3000, 0, 0);
         this.editor = new Editor(image, perspective);
         //this.commandHistory = new CommandHistory();
         this.mementoHistory = new MementoHistory();
@@ -35,6 +35,9 @@ public class Manager {
     public Editor getEditor() {
         return editor;
     }
+    public CommandHistory getCommandHistory() {
+        return commandHistory;
+    }
 
 
 
@@ -42,13 +45,17 @@ public class Manager {
 
     public void undo() {
         if(commandHistory.canUndo()){
+            System.out.println("UNDO - Index avant: " + commandHistory.getIterator().getIndex());
             Command command = commandHistory.getIterator().previous();
+            System.out.println("UNDO - Index après: " + commandHistory.getIterator().getIndex() + " - Command: " + command.getClass().getSimpleName());
             command.undo();
         }
     }
     public void redo() {
         if(commandHistory.canRedo()){
+            System.out.println("REDO - Index avant: " + commandHistory.getIterator().getIndex());
             Command command = commandHistory.getIterator().next();
+            System.out.println("REDO - Index après: " + commandHistory.getIterator().getIndex() + " - Command: " + command.getClass().getSimpleName());
             command.execute();
         }
     }

@@ -11,7 +11,16 @@ public class EditorController implements Observer{
     }
 
     public void update(Observable o){
-        // Fonctions sur vue 
+        if (o instanceof Image){
+            view.setImage( ((Image) o).getPath() );
+        }else if (o instanceof Perspective){
+            Perspective p = (Perspective) o;
+            // Appliquer le zoom avec les dimensions du crop
+            view.zoomOnImage(p.getWidth(), p.getHeight());
+            // Appliquer la translation avec la position du crop
+            view.translateOnImage(p.getX(), p.getY());
+        }
+        
     }
 
     public void doZoom(double factor){

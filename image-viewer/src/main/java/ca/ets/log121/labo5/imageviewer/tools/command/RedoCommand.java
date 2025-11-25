@@ -5,7 +5,7 @@ public class RedoCommand implements Command {
     @Override
     public boolean execute() {
         Manager.getInstance().redo();
-        return true;
+        return false;
     }
 
     @Override
