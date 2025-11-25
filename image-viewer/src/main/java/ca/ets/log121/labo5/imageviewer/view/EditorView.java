@@ -1,7 +1,6 @@
 package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
-import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,9 +59,9 @@ public class EditorView {
     }
     
     /**
-     * Applique un zoom sur l'image en définissant une nouvelle taille de crop
-     * @param cropWidth Nouvelle largeur de la zone visible
-     * @param cropHeight Nouvelle hauteur de la zone visible
+     * Apply zoom on image while defining new crop size
+     * @param cropWidth New width for visible zone
+     * @param cropHeight New height for visible zone
      */
     public void zoomOnImage(int cropWidth, int cropHeight) {
         if (imageView != null && imageView.getImage() != null) {
@@ -70,12 +69,12 @@ public class EditorView {
             double imageWidth = image.getWidth();
             double imageHeight = image.getHeight();
             
-            // Calculer le facteur de zoom (rapport entre l'image complète et le crop)
+            // Compute zoom factor (relationship between the complete image and crop)
             double zoomFactorX = imageWidth / cropWidth;
             double zoomFactorY = imageHeight / cropHeight;
             double zoomFactor = Math.max(zoomFactorX, zoomFactorY);
             
-            // Appliquer le zoom
+            // Apply zoom
             imageView.setScaleX(zoomFactor);
             imageView.setScaleY(zoomFactor);
             
@@ -85,14 +84,14 @@ public class EditorView {
     }
     
     /**
-     * Déplace l'image vers une nouvelle position (translation)
-     * @param deltaX Déplacement horizontal (positif = droite, négatif = gauche)
-     * @param deltaY Déplacement vertical (positif = bas, négatif = haut)
+     * Translate image to new position (translation)
+     * @param deltaX horizontal translation (positive = right, négative = left)
+     * @param deltaY Vertical translation (positive = down, négative = up)
      */
     public void translateOnImage(int deltaX, int deltaY) {
         if (imageView != null) {
             
-            // Appliquer le déplacement relatif
+            // Apply relative translation
             imageView.setTranslateX(deltaX);
             imageView.setTranslateY(deltaY);
             
@@ -102,19 +101,12 @@ public class EditorView {
         }
     }
 
-    // ============ GETTERS ============
+
+    // ============ GETTERS & SETTERS ============
 
     public boolean getIsOpen() {
         return isOpen;
     }
-
-
-
-
-
-
-
-
 
 
     // ============ EVENT HANDLERS ============

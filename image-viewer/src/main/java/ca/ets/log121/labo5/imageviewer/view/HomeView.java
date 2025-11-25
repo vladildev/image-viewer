@@ -1,9 +1,6 @@
 package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.HomeController;
-import ca.ets.log121.labo5.imageviewer.tools.command.Command;
-import ca.ets.log121.labo5.imageviewer.tools.command.ImportImageCommand;
-import ca.ets.log121.labo5.imageviewer.tools.command.LoadConfigFileCommand;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class HomeView {
-    private Command importImageCommand;
     private HomeController homeController;
     private final FileChooser fileChooser = new FileChooser();
     private Stage stage;
@@ -23,6 +19,9 @@ public class HomeView {
     public HomeView(Stage stage) {
         this.stage = stage;
     }
+
+
+    // =========== FXML COMPONENTS ===========
 
     @FXML
     protected void searchLocalFiles() throws IOException {
@@ -48,6 +47,9 @@ public class HomeView {
         stage.setScene(scene);
         stage.show();
     }
+
+
+    // =========== SETTERS & GETTERS ===========
 
     public void setHomeController(HomeController homeController) {
         this.homeController = homeController;

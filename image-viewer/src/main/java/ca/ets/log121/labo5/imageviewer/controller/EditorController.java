@@ -1,10 +1,7 @@
 package ca.ets.log121.labo5.imageviewer.controller;
-import ca.ets.log121.labo5.imageviewer.model.Manager;
 import ca.ets.log121.labo5.imageviewer.model.observer.*;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import ca.ets.log121.labo5.imageviewer.view.EditorView;
-
-import java.io.IOException;
 
 public class EditorController implements Observer {
     EditorView view;

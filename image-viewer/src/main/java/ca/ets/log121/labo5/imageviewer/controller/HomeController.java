@@ -25,9 +25,10 @@ public class HomeController implements Observer {
             Manager.getInstance().getEditor().getImage().detach(this);
 
             try {
-                editorView.show();  // <-- HERE is the correct place
+                editorView.show();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e);
+                // Nothing else as it means it didn't work and user has to re-try
             }
         }
     }
