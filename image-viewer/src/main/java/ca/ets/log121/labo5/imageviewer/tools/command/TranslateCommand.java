@@ -1,4 +1,5 @@
 package ca.ets.log121.labo5.imageviewer.tools.command;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
 
 public class TranslateCommand implements Command {
     private final int deltaX;

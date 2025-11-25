@@ -13,25 +13,25 @@ public class CommandHistoryIterator implements Iterator {
         this.index = 0;
     }
     @Override
-    public Object next() {
+    public Command next() {
         if (hasNext()) {
-            return history.get(index++);
-        }
-        return null;
-    }
-    @Override
-    public Object previous() {
-        if (hasPrevious()) {
             return history.get(--index);
         }
         return null;
     }
     @Override
-    public boolean hasNext() {
-        return index < history.size();
+    public Command previous() {
+        if (hasPrevious()) {
+            return history.get(index++);
+        }
+        return null;
     }
     @Override
     public boolean hasPrevious() {
+        return index < history.size();
+    }
+    @Override
+    public boolean hasNext() {
         return index > 0;
     }
     @Override

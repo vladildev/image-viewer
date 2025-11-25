@@ -13,7 +13,7 @@
 - [-Loucas] EditorController
 - [] ThumbnailController
 - [-Loucas] CommandHistory
-- [] CommandHistoryIterator
+- [-Loucas] CommandHistoryIterator
 - [] MementoHistory
 - [-Vlad] Editor
 - [-Vlad] EditorMemento
