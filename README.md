@@ -3,7 +3,7 @@
 ## TODO*
 - [x] HomeView
 - [-Felix] EditorView
-- [] ThumnailView
+- [-Felix] ThumnailView
 - [-Loucas] Invoker
 - [-Vlad] Manager
 - [-Loucas] Liste de commands
@@ -11,7 +11,7 @@
 - [-Vlad] Image
 - [-Vlad] Perspective
 - [-Loucas] EditorController
-- [] ThumbnailController
+- [-Felix] ThumbnailController
 - [-Loucas] CommandHistory
 - [-Loucas] CommandHistoryIterator
 - [] MementoHistory
