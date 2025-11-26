@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class EditorView {
     private Stage stage;
@@ -40,10 +41,15 @@ public class EditorView {
         Parent root = loader.load();
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Éditeur d'images");
-        imageView = new ImageView(Manager.getInstance().getEditor().getImage().getPath());
+
+        String path = Manager.getInstance().getEditor().getImage().getPath();
+        Image img = new Image(new File(path).toURI().toString());
+        imageView.setImage(img);
+        imageView.setFitWidth(400);
+        imageView.setPreserveRatio(true);
+
         stage.setScene(scene);
         stage.show();
-        isOpen = true;
     }
 
     public void setController(EditorController controller) {
@@ -107,10 +113,6 @@ public class EditorView {
 
 
     // ============ GETTERS & SETTERS ============
-
-    public boolean getIsOpen() {
-        return isOpen;
-    }
 
 
     // ============ EVENT HANDLERS ============
