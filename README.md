@@ -1,13 +1,13 @@
 # image-viewer (LOG121)
 
 ## TODO*
-- [-Felix] HomeView
+- [x] HomeView
 - [-Felix] EditorView
 - [] ThumnailView
 - [-Loucas] Invoker
 - [-Vlad] Manager
 - [-Loucas] Liste de commands
-- [] HomeController
+- [x] HomeController
 - [-Vlad] Image
 - [-Vlad] Perspective
 - [-Loucas] EditorController

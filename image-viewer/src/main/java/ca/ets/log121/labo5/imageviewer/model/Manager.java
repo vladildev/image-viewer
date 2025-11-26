@@ -10,7 +10,6 @@ import ca.ets.log121.labo5.imageviewer.tools.command.Command;
 public class Manager {
     private static Manager instance;
     private Editor editor;
-    //private CommandHistory commandHistory;
     private MementoHistory mementoHistory;
     private CommandHistory commandHistory;
 
@@ -18,7 +17,6 @@ public class Manager {
         Image image = new Image(3000, 3000);
         Perspective perspective = new Perspective(3000, 3000, 0, 0);
         this.editor = new Editor(image, perspective);
-        //this.commandHistory = new CommandHistory();
         this.mementoHistory = new MementoHistory();
         this.commandHistory = new CommandHistory();
     }

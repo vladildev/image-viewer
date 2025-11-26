@@ -3,17 +3,17 @@ import ca.ets.log121.labo5.imageviewer.model.observer.*;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import ca.ets.log121.labo5.imageviewer.view.EditorView;
 
-public class EditorController implements Observer{
+public class EditorController implements Observer {
     EditorView view;
     
     public EditorController(EditorView view) {
         this.view = view;
     }
 
-    public void update(Observable o){
+    public void update(Observable o) {
         if (o instanceof Image){
             view.setImage( ((Image) o).getPath() );
-        }else if (o instanceof Perspective){
+        } else if (o instanceof Perspective){
             Perspective p = (Perspective) o;
             // Appliquer le zoom avec les dimensions du crop
             view.zoomOnImage(p.getWidth(), p.getHeight());
