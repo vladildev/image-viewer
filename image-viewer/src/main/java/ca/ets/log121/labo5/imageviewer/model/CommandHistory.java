@@ -18,8 +18,8 @@ public class CommandHistory {
     public void addCommand(Command command) {
         System.out.println(">>> addCommand: " + command.getClass().getSimpleName() + " - canRedo: " + canRedo() + " - index: " + iterator.getIndex());
         if (canRedo()){
-            // Supprimer tout ce qui est après l'index actuel (le "futur" annulé)
-            // Utiliser subList(0, index).clear() ne marche pas bien, donc on garde la création de nouvelle liste
+            // Delete everything that is after the current index
+            // Use subList(0, index).clear() doesnt work well, keep the new list creation
             List<Command> newHistory = new ArrayList<>(history.subList(0, iterator.getIndex()));
             history.clear();
             history.addAll(newHistory);
