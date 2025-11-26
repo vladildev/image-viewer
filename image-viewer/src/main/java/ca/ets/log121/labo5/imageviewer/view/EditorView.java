@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -26,6 +28,12 @@ public class EditorView {
     // =========== FXML COMPONENTS ===========
     @FXML
     private ImageView imageView;
+    @FXML
+    private TextField zoomInput;
+    @FXML
+    private TextField translateXInput;
+    @FXML
+    private TextField translateYInput;
 
     // ======================================
     
@@ -120,14 +128,26 @@ public class EditorView {
     @FXML
     public void handleZoom(ActionEvent event) {
         if (controller != null) {
-            controller.doZoom(1.2);
+            try {
+                controller.doZoom(Double.parseDouble(zoomInput.getText()));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number: " + zoomInput.getText());
+            }
         }
     }
     
     @FXML
     public void handleTranslate(ActionEvent event) {
         if (controller != null) {
-            controller.doTranslate(10, 10);
+            int x = 0;
+            int y = 0;
+            try {
+                x = translateXInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateXInput.getText());
+                y = translateYInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateYInput.getText());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number x: " + translateXInput.getText() + ", y: " + translateYInput.getText());
+            }
+            controller.doTranslate(x, y);
         }
     }
     
