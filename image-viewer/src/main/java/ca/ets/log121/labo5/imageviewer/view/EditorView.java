@@ -1,27 +1,39 @@
 package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
+import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class EditorView {
     private Stage stage;
     private EditorController controller;
-    private boolean isOpen = false;
+    private FileChooser fileChooser = new FileChooser();
     
 
     // =========== FXML COMPONENTS ===========
     @FXML
     private ImageView imageView;
+    @FXML
+    private TextField zoomInput;
+    @FXML
+    private TextField translateXInput;
+    @FXML
+    private TextField translateYInput;
 
     // ======================================
     
@@ -37,9 +49,15 @@ public class EditorView {
         Parent root = loader.load();
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Éditeur d'images");
+
+        String path = Manager.getInstance().getEditor().getImage().getPath();
+        Image img = new Image(new File(path).toURI().toString());
+        imageView.setImage(img);
+        imageView.setFitWidth(400);
+        imageView.setPreserveRatio(true);
+
         stage.setScene(scene);
         stage.show();
-        isOpen = true;
     }
 
     public void setController(EditorController controller) {
@@ -104,34 +122,47 @@ public class EditorView {
 
     // ============ GETTERS & SETTERS ============
 
-    public boolean getIsOpen() {
-        return isOpen;
-    }
-
 
     // ============ EVENT HANDLERS ============
 
     @FXML
     public void handleZoom(ActionEvent event) {
         if (controller != null) {
-            controller.doZoom(1.2);
+            try {
+                controller.doZoom(Double.parseDouble(zoomInput.getText()));
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number: " + zoomInput.getText());
+            }
         }
     }
     
     @FXML
     public void handleTranslate(ActionEvent event) {
         if (controller != null) {
-            controller.doTranslate(10, 10);
+            int x = 0;
+            int y = 0;
+            try {
+                x = translateXInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateXInput.getText());
+                y = translateYInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateYInput.getText());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number x: " + translateXInput.getText() + ", y: " + translateYInput.getText());
+            }
+            controller.doTranslate(x, y);
         }
     }
     
     @FXML
     public void handleImportImage(ActionEvent event) {
-        System.out.println("Button clicked!");
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            System.out.println("Importing image...");
-            controller.doImportImage("C:\\Users\\louca\\Downloads\\IMG_3645.jpeg");
+            fileChooser.setTitle("Open Image File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                controller.doImportImage(selectedFile.getPath());
+            }
         } else {
             System.out.println("Controller is null!");
         }
@@ -140,24 +171,47 @@ public class EditorView {
     @FXML
     public void handleSaveImage(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doSaveImage("path/to/save.jpg");
+            fileChooser.setTitle("Save Edited Image");
+
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "PNG Image", "*.png"
+            ));
+
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                controller.doSaveImage(file.getPath());
+            }
         }
     }
     
     @FXML
     public void handleImportConfig(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doLoadConfigFile("path/to/config.json");
+            fileChooser.setTitle("Open Configuration File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Json files", "*.json")
+            );
+
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            if (selectedFile != null) {
+                controller.doLoadConfigFile(selectedFile.getPath());
+            }
         }
     }
     
     @FXML
     public void handleSaveConfig(ActionEvent event) {
         if (controller != null) {
-            // TODO: Ouvrir un FileChooser
-            controller.doSaveConfigFile("path/to/config.json");
+            fileChooser.setTitle("Save Configurations");
+
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                    "Json File", "*.json"
+            ));
+
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                controller.doSaveConfigFile(file.getPath());
+            }
         }
     }
     
