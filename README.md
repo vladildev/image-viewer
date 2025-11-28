@@ -2,7 +2,7 @@
 
 ## TODO*
 - [x] HomeView
-- [-Felix] EditorView
+- [x] EditorView
 - [-Felix] ThumnailView
 - [-Loucas] Invoker
 - [-Vlad] Manager
