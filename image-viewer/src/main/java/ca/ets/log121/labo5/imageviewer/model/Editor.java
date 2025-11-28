@@ -25,7 +25,8 @@ public class Editor {
         return new Editor(image, perspective);
     }
 
-    public Memento createEditorMemento() {
-        return new EditorMemento(copyEditor());
+    public Memento createConfigEditorMemento() {
+        return new EditorMemento(new Perspective(this.perspective.getHeight(), this.perspective.getWidth(),
+                this.perspective.getX(), this.perspective.getY()));
     }
 }

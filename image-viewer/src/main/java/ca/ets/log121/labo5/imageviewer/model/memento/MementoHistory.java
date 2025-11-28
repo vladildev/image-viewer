@@ -14,6 +14,4 @@ public class MementoHistory {
     public boolean isEmpty() {
         return history.isEmpty();
     }
-
-
 }
