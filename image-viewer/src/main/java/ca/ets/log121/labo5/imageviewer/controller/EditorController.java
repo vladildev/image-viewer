@@ -12,7 +12,10 @@ public class EditorController implements Observer {
 
     public void update(Observable o) {
         if (o instanceof Image){
-            view.setImage( ((Image) o).getPath() );
+            Image img = (Image) o;
+            view.setImage(img.getPath());
+            // Mettre à jour les dimensions du cadre avec les dimensions de l'image
+            view.setCadreDimensions(img.getWidth(), img.getHeight());
         } else if (o instanceof Perspective){
             Perspective p = (Perspective) o;
             // Appliquer le zoom avec les dimensions du crop

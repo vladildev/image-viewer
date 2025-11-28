@@ -26,6 +26,7 @@ public class HomeController implements Observer {
 
             try {
                 editorView.show();
+                o.notifyObservers();
             } catch (IOException e) {
                 System.out.println(e);
                 // Nothing else as it means it didn't work and user has to re-try

@@ -10,7 +10,7 @@
             prefHeight="600" prefWidth="800">
 
     <top>
-        <ToolBar>
+        <ToolBar style="-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 2);" viewOrder="-1">
             <MenuButton text="File">
                 <items>
                     <MenuItem text="Import Image" onAction="#handleImportImage"/>
@@ -47,15 +47,28 @@
     </top>
 
     <center>
-        <ImageView fx:id="imageView"
-                   preserveRatio="true"
-                   fitWidth="600"
-                   fitHeight="500"
-                   style="-fx-background-color: white;">
-            <BorderPane.margin>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </BorderPane.margin>
-        </ImageView>
+        <StackPane>
+            <ImageView fx:id="imageView"
+                       preserveRatio="true"
+                       fitWidth="600"
+                       fitHeight="500"
+                       style="-fx-background-color: white;">
+                <StackPane.margin>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </StackPane.margin>
+            </ImageView>
+            
+            <!-- Cadre semi-transparent -->
+            <javafx.scene.shape.Rectangle fx:id="cadre"
+                                          width="200"
+                                          height="150"
+                                          fill="transparent"
+                                          stroke="red"
+                                          strokeWidth="3"
+                                          strokeType="INSIDE"
+                                          opacity="0.7"
+                                          mouseTransparent="true"/>
+        </StackPane>
     </center>
 
 </BorderPane>
