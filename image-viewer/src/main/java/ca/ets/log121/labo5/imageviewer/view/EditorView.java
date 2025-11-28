@@ -3,6 +3,8 @@ package ca.ets.log121.labo5.imageviewer.view;
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
 import ca.ets.log121.labo5.imageviewer.model.Manager;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
+import ca.ets.log121.labo5.imageviewer.controller.ThumbnailController;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -23,6 +26,7 @@ public class EditorView {
     private Stage stage;
     private EditorController controller;
     private FileChooser fileChooser = new FileChooser();
+    private ThumbnailController thumbnailController;
     
 
     // =========== FXML COMPONENTS ===========
@@ -35,10 +39,14 @@ public class EditorView {
     @FXML
     private TextField translateYInput;
 
+    @FXML
+    private VBox thumbnailContainer;
+
     // ======================================
     
-    public EditorView(Stage stage) {
+    public EditorView(Stage stage, ThumbnailController thumbnailController) {
         this.stage = stage;
+        this.thumbnailController = thumbnailController;
     }
 
     public void show() throws IOException {
@@ -58,6 +66,25 @@ public class EditorView {
 
         stage.setScene(scene);
         stage.show();
+        loadThumbnailView();
+    }
+
+    public void loadThumbnailView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/ca/ets/log121/labo5/imageviewer/thumbnail-view.fxml")
+            );
+
+            Parent thumbRoot = loader.load();
+
+            thumbnailController = loader.getController();
+            thumbnailController.setEditor(controller);
+
+            thumbnailContainer.getChildren().add(thumbRoot);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setController(EditorController controller) {
@@ -226,6 +253,27 @@ public class EditorView {
     public void handleRedo(ActionEvent event) {
         if (controller != null) {
             controller.doRedo();
+        }
+    }
+
+    @FXML
+    public void openThumbnail() {
+        if (controller != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/ca/ets/log121/labo5/imageviewer/view/ThumbnailView.fxml")
+                );
+
+                Parent thumbRoot = loader.load();
+                thumbnailController = loader.getController();
+                thumbnailController.setEditor(controller);
+
+                thumbnailContainer.getChildren().add(thumbRoot);
+                Manager.getInstance().getEditor().getImage().attach(thumbnailController);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

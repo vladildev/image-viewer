@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Rectangle?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="ca.ets.log121.labo5.imageviewer.controller.ThumbnailController"
+           fx:id="root"
+           style="-fx-background-color: white;">
+
+    <ImageView fx:id="thumbnailImage"
+               preserveRatio="true"
+               fitWidth="180"/>
+
+    <Rectangle fx:id="viewportRect"
+               fill="rgba(0,0,255,0.2)"
+               stroke="blue"
+               strokeWidth="2"/>
+
+</StackPane>

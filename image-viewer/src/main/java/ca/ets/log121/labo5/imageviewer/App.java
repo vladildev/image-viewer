@@ -15,8 +15,12 @@ import java.io.IOException;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        // THUMBNAIL Components creation
+        ThumbnailView thumbnailView = new ThumbnailView();
+        ThumbnailController thumbnailController = new ThumbnailController();
+
         // EDITOR Components creation
-        EditorView editorView = new EditorView(stage);
+        EditorView editorView = new EditorView(stage, thumbnailController);
         EditorController editorController = new EditorController(editorView);
         editorView.setController(editorController);
 
@@ -24,11 +28,6 @@ public class App extends Application {
         HomeView homeView = new HomeView(stage);
         HomeController homeController = new HomeController(homeView, editorView);
         homeView.setHomeController(homeController);
-
-        // THUMBNAIL Components creation
-        // TODO edit thumbnail view and controller
-        ThumbnailView thumbnailView = new ThumbnailView();
-        ThumbnailController thumbnailController = new ThumbnailController();
 
         // MANAGER Components creation
         Manager manager = Manager.getInstance();

@@ -58,4 +58,12 @@
         </ImageView>
     </center>
 
+    <right>
+        <VBox fx:id="thumbnailContainer"
+              prefWidth="200"
+              spacing="10"
+              style="-fx-background-color: #f6f6f6; -fx-padding: 10;">
+        </VBox>
+    </right>
+    
 </BorderPane>
