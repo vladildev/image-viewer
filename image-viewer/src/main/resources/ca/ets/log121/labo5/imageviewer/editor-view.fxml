@@ -47,23 +47,9 @@
     </top>
 
     <center>
-        <ImageView fx:id="imageView"
-                   preserveRatio="true"
-                   fitWidth="600"
-                   fitHeight="500"
-                   style="-fx-background-color: white;">
-            <BorderPane.margin>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </BorderPane.margin>
-        </ImageView>
+        <StackPane fx:id="editorStack" style="-fx-background-color: white;">
+            <ImageView fx:id="imageView" fitWidth="600" fitHeight="500" preserveRatio="true"/>
+        </StackPane>
     </center>
-
-    <right>
-        <VBox fx:id="thumbnailContainer"
-              prefWidth="200"
-              spacing="10"
-              style="-fx-background-color: #f6f6f6; -fx-padding: 10;">
-        </VBox>
-    </right>
     
 </BorderPane>

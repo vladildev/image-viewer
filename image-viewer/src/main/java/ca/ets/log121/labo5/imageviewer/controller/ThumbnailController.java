@@ -19,11 +19,8 @@ public class ThumbnailController implements Observer {
 
     private EditorController editor;
 
-    public void setEditor(EditorController editor) {
+    public void setEditor(EditorController editor, Image img) {
         this.editor = editor;
-
-        String path = Manager.getInstance().getEditor().getImage().getPath();
-        Image img = new Image(new File(path).toURI().toString());
         thumbnailImage.setImage(img);
     }
 

@@ -6,9 +6,12 @@
 
 <StackPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
-           fx:controller="ca.ets.log121.labo5.imageviewer.controller.ThumbnailController"
            fx:id="root"
-           style="-fx-background-color: white;">
+           prefWidth="200"
+           prefHeight="150"
+           maxWidth="200"
+           maxHeight="150"
+           style="-fx-background-color: #dddddd;">
 
     <ImageView fx:id="thumbnailImage"
                preserveRatio="true"

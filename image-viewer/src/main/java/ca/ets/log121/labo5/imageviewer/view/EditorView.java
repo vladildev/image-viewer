@@ -2,25 +2,23 @@ package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
 import ca.ets.log121.labo5.imageviewer.model.Manager;
-import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import ca.ets.log121.labo5.imageviewer.controller.ThumbnailController;
-import ca.ets.log121.labo5.imageviewer.model.Manager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class EditorView {
     private Stage stage;
@@ -40,7 +38,7 @@ public class EditorView {
     private TextField translateYInput;
 
     @FXML
-    private VBox thumbnailContainer;
+    private StackPane editorStack;;
 
     // ======================================
     
@@ -66,21 +64,23 @@ public class EditorView {
 
         stage.setScene(scene);
         stage.show();
-        loadThumbnailView();
+        loadThumbnailView(img);
     }
 
-    public void loadThumbnailView() {
+    public void loadThumbnailView(Image img) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/ca/ets/log121/labo5/imageviewer/thumbnail-view.fxml")
             );
-
+            loader.setController(thumbnailController);
             Parent thumbRoot = loader.load();
 
-            thumbnailController = loader.getController();
-            thumbnailController.setEditor(controller);
+            this.thumbnailController = loader.getController();
+            this.thumbnailController.setEditor(this.controller, img);
+            this.editorStack.getChildren().add(thumbRoot);
 
-            thumbnailContainer.getChildren().add(thumbRoot);
+            StackPane.setMargin(thumbRoot, new Insets(10));
+            StackPane.setAlignment(thumbRoot, Pos.BOTTOM_RIGHT);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -253,27 +253,6 @@ public class EditorView {
     public void handleRedo(ActionEvent event) {
         if (controller != null) {
             controller.doRedo();
-        }
-    }
-
-    @FXML
-    public void openThumbnail() {
-        if (controller != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/ca/ets/log121/labo5/imageviewer/view/ThumbnailView.fxml")
-                );
-
-                Parent thumbRoot = loader.load();
-                thumbnailController = loader.getController();
-                thumbnailController.setEditor(controller);
-
-                thumbnailContainer.getChildren().add(thumbRoot);
-                Manager.getInstance().getEditor().getImage().attach(thumbnailController);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
