@@ -2,22 +2,23 @@ package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
 import ca.ets.log121.labo5.imageviewer.model.Manager;
-import ca.ets.log121.labo5.imageviewer.tools.command.*;
+import ca.ets.log121.labo5.imageviewer.controller.ThumbnailController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class EditorView {
     private Stage stage;
@@ -35,6 +36,7 @@ public class EditorView {
     @FXML
     private TextField translateYInput;
     @FXML
+    private StackPane editorStack;
     private javafx.scene.shape.Rectangle cadre;
 
     // ======================================
@@ -147,12 +149,15 @@ public class EditorView {
         stage.show();
     }
 
+    public StackPane getThumbnailStack() {
+        return editorStack;
+    }
+    // =========== SETTERS ===========
+
     public void setController(EditorController controller) {
         this.controller = controller;
     }
 
-    // =========== SETTERS ===========
-    
     public void setImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
