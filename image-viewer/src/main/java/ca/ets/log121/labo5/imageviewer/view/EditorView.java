@@ -2,16 +2,18 @@ package ca.ets.log121.labo5.imageviewer.view;
 
 import ca.ets.log121.labo5.imageviewer.controller.EditorController;
 import ca.ets.log121.labo5.imageviewer.model.Manager;
-import ca.ets.log121.labo5.imageviewer.tools.command.*;
+import ca.ets.log121.labo5.imageviewer.controller.ThumbnailController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -38,6 +40,7 @@ public class EditorView {
     @FXML
     private TextField translateYInput;
     @FXML
+    private StackPane editorStack;
     private javafx.scene.shape.Rectangle cadre;
     @FXML
     private ComboBox<String> snapshotsComboBox;
@@ -54,17 +57,21 @@ public class EditorView {
         );
         loader.setController(this);
         Parent root = loader.load();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1080, 800);
         stage.setTitle("Éditeur d'images");
 
         String path = Manager.getInstance().getEditor().getImage().getPath();
         Image img = new Image(new File(path).toURI().toString());
         imageView.setImage(img);
-        imageView.setFitWidth(400);
+        imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
 
-        // Capture zoom avec scroll de la souris (Ctrl + scroll)
-        imageView.setOnScroll(event -> {
+        // Initialiser le cadre au centre de l'image
+        cadre.setWidth(imageView.getFitWidth());
+        cadre.setHeight(imageView.getFitHeight());
+
+        // Capture zoom avec scroll de la souris (Ctrl + scroll) sur le cadre
+        cadre.setOnScroll(event -> {
             if (event.isControlDown() && controller != null) {
                 double zoomFactor = event.getDeltaY() > 0 ? 1.1 : 0.9;
                 controller.doZoom(zoomFactor);
@@ -72,8 +79,8 @@ public class EditorView {
             }
         });
 
-        // Capture zoom avec gestes tactiles (pinch to zoom)
-        imageView.setOnZoom(event -> {
+        // Capture zoom avec gestes tactiles (pinch to zoom) sur le cadre
+        cadre.setOnZoom(event -> {
             if (controller != null) {
                 double zoomFactor = event.getZoomFactor();
                 controller.doZoom(zoomFactor);
@@ -84,25 +91,44 @@ public class EditorView {
         // Variables pour stocker la position initiale du drag
         final double[] dragStartX = new double[1];
         final double[] dragStartY = new double[1];
+        final double[] cadreStartX = new double[1];
+        final double[] cadreStartY = new double[1];
 
-        // Capture le début du drag
-        imageView.setOnMousePressed(event -> {
+        // Capture le début du drag sur le cadre
+        cadre.setOnMousePressed(event -> {
             dragStartX[0] = event.getSceneX();
             dragStartY[0] = event.getSceneY();
+            cadreStartX[0] = cadre.getTranslateX();
+            cadreStartY[0] = cadre.getTranslateY();
+            event.consume();
         });
 
-        // Capture le drag (déplacement avec souris enfoncée)
-        imageView.setOnMouseDragged(event -> {
+        // Capture le drag (déplacement avec souris enfoncée) sur le cadre
+        cadre.setOnMouseDragged(event -> {
+            if (controller != null) {
+                // Calculer le déplacement total depuis le début du drag
+                double totalDeltaX = event.getSceneX() - dragStartX[0];
+                double totalDeltaY = event.getSceneY() - dragStartY[0];
+                
+                // Appliquer le déplacement depuis la position initiale
+                double newX = cadreStartX[0] + totalDeltaX;
+                double newY = cadreStartY[0] + totalDeltaY;
+                
+                cadre.setTranslateX(newX);
+                cadre.setTranslateY(newY);
+                
+                event.consume();
+            }
+        });
+        
+        // Sauvegarder la position finale dans le contrôleur quand on relâche
+        cadre.setOnMouseReleased(event -> {
             if (controller != null) {
                 int deltaX = (int)(event.getSceneX() - dragStartX[0]);
                 int deltaY = (int)(event.getSceneY() - dragStartY[0]);
-                
-                // Mettre à jour la position de départ pour le prochain drag
-                dragStartX[0] = event.getSceneX();
-                dragStartY[0] = event.getSceneY();
-                
-                // Appliquer la translation
-                controller.doTranslate(deltaX, deltaY);
+                if (deltaX != 0 || deltaY != 0) {
+                    controller.doTranslate(deltaX, deltaY);
+                }
                 event.consume();
             }
         });
@@ -136,12 +162,15 @@ public class EditorView {
         }
     }
 
+    public StackPane getThumbnailStack() {
+        return editorStack;
+    }
+    // =========== SETTERS ===========
+
     public void setController(EditorController controller) {
         this.controller = controller;
     }
 
-    // =========== SETTERS ===========
-    
     public void setImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
@@ -153,9 +182,9 @@ public class EditorView {
     }
 
     /**
-     * Apply zoom on image while defining new crop size
-     * @param cropWidth New width for visible zone
-     * @param cropHeight New height for visible zone
+     * Apply zoom on the frame (cadre) by changing its size
+     * @param cropWidth New width for visible zone (frame width)
+     * @param cropHeight New height for visible zone (frame height)
      */
     public void zoomOnImage(int cropWidth, int cropHeight) {
         if (imageView != null && imageView.getImage() != null) {
@@ -178,37 +207,30 @@ public class EditorView {
     }
     
     /**
-     * Translate image to new position (translation)
+     * Translate the frame (cadre) to new position
      * @param deltaX horizontal translation (positive = right, négative = left)
      * @param deltaY Vertical translation (positive = down, négative = up)
      */
     public void translateOnImage(int deltaX, int deltaY) {
-        if (imageView != null) {
+        if (cadre != null) {
+            // Définir directement la nouvelle position (pas d'ajout cumulatif)
+            cadre.setTranslateX(deltaX);
+            cadre.setTranslateY(deltaY);
             
-            // Apply relative translation
-            imageView.setTranslateX(deltaX);
-            imageView.setTranslateY(deltaY);
-            
-            System.out.println("Translation applied: delta=(" + deltaX + "," + deltaY + 
-                             ") new pos=(" + imageView.getTranslateX() + "," + 
-                             imageView.getTranslateY() + ")");
+            System.out.println("Translation applied to frame: pos=(" + deltaX + "," + deltaY + ")");
         }
     }
     
     /**
-     * Set the dimensions of the semi-transparent frame (cadre) to match displayed image bounds
-     * @param imageWidth Width of the original image
-     * @param imageHeight Height of the original image
+     * Set the dimensions of the semi-transparent frame (cadre)
+     * @param width Width of the frame
+     * @param height Height of the frame
      */
-    public void setCadreDimensions(int imageWidth, int imageHeight) {
-        if (cadre != null && imageView != null && imageView.getImage() != null) {
-            // Calculer les dimensions affichées de l'image (avec preserveRatio)
-            double displayedWidth = imageView.getBoundsInParent().getWidth();
-            double displayedHeight = imageView.getBoundsInParent().getHeight();
-            
-            cadre.setWidth(displayedWidth);
-            cadre.setHeight(displayedHeight);
-            System.out.println("Cadre dimensions set to displayed size: " + displayedWidth + "x" + displayedHeight);
+    public void setCadreDimensions(int width, int height) {
+        if (cadre != null) {
+            cadre.setWidth(width);
+            cadre.setHeight(height);
+            System.out.println("Frame dimensions set to: " + width + "x" + height);
         }
     }
 

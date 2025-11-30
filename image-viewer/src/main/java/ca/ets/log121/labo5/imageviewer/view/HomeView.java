@@ -20,7 +20,6 @@ public class HomeView {
         this.stage = stage;
     }
 
-
     // =========== FXML COMPONENTS ===========
 
     @FXML
