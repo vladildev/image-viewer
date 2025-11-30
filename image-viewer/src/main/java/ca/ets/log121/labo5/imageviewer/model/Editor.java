@@ -27,6 +27,6 @@ public class Editor {
 
     public Memento createConfigEditorMemento() {
         return new EditorMemento(new Perspective(this.perspective.getHeight(), this.perspective.getWidth(),
-                this.perspective.getX(), this.perspective.getY()));
+            this.perspective.getX(), this.perspective.getY()), java.time.LocalDateTime.now());
     }
 }

@@ -30,18 +30,25 @@
             <Separator orientation="VERTICAL"/>
 
             <!-- Zoom -->
-            <Label text="Zoom:"/>
-            <TextField fx:id="zoomInput" prefWidth="60" promptText="100%"/>
-            <Button fx:id="zoomButton" text="Apply" onAction="#handleZoom"/>
+            <Button fx:id="zoomIntButton" text="+" onAction="#handleZoomIn"/>
+            <Button fx:id="zoomOutButton" text="-" onAction="#handleZoomOut"/>
 
             <Separator orientation="VERTICAL"/>
 
             <!-- Translation -->
-            <Label text="Translate X:"/>
-            <TextField fx:id="translateXInput" prefWidth="60" promptText="px"/>
-            <Label text="Y:"/>
-            <TextField fx:id="translateYInput" prefWidth="60" promptText="px"/>
-            <Button fx:id="translateButton" text="Apply" onAction="#handleTranslate"/>
+            <Button fx:id="translateLeftButton" text="←" onAction="#handleTranslateLeft"/>
+            <Button fx:id="translateLeftRight" text="→" onAction="#handleTranslateRight"/>
+            <Button fx:id="translateLeftUp" text="↑" onAction="#handleTranslateUp"/>
+            <Button fx:id="translateLeftBottom" text="↓" onAction="#handleTranslateBottom"/>
+
+            <Separator orientation="VERTICAL"/>
+
+            <!-- Snapshots list -->
+            <Label text="Snapshots :"/>
+            <HBox spacing="6" alignment="CENTER_LEFT">
+                <ComboBox fx:id="snapshotsComboBox" prefWidth="150" onAction="#handleSnapshotSelection"/>
+                <Button text="Save" onAction="#handleSaveSnapshot"/>
+            </HBox>
 
         </ToolBar>
     </top>
