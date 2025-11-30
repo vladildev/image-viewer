@@ -49,18 +49,18 @@ public class EditorView {
         );
         loader.setController(this);
         Parent root = loader.load();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1080, 800);
         stage.setTitle("Éditeur d'images");
 
         String path = Manager.getInstance().getEditor().getImage().getPath();
         Image img = new Image(new File(path).toURI().toString());
         imageView.setImage(img);
-        imageView.setFitWidth(400);
+        imageView.setFitWidth(600);
         imageView.setPreserveRatio(true);
 
         // Initialiser le cadre au centre de l'image
-        cadre.setWidth(200);
-        cadre.setHeight(150);
+        cadre.setWidth(imageView.getFitWidth());
+        cadre.setHeight(imageView.getFitHeight());
 
         // Capture zoom avec scroll de la souris (Ctrl + scroll) sur le cadre
         cadre.setOnScroll(event -> {
