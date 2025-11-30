@@ -24,7 +24,6 @@ public class EditorView {
     private Stage stage;
     private EditorController controller;
     private FileChooser fileChooser = new FileChooser();
-    private ThumbnailController thumbnailController;
     
 
     // =========== FXML COMPONENTS ===========
@@ -36,15 +35,13 @@ public class EditorView {
     private TextField translateXInput;
     @FXML
     private TextField translateYInput;
-
     @FXML
     private StackPane editorStack;;
 
     // ======================================
     
-    public EditorView(Stage stage, ThumbnailController thumbnailController) {
+    public EditorView(Stage stage) {
         this.stage = stage;
-        this.thumbnailController = thumbnailController;
     }
 
     public void show() throws IOException {
@@ -64,35 +61,17 @@ public class EditorView {
 
         stage.setScene(scene);
         stage.show();
-        loadThumbnailView(img);
     }
 
-    public void loadThumbnailView(Image img) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/ca/ets/log121/labo5/imageviewer/thumbnail-view.fxml")
-            );
-            loader.setController(thumbnailController);
-            Parent thumbRoot = loader.load();
-
-            this.thumbnailController = loader.getController();
-            this.thumbnailController.setEditor(this.controller, img);
-            this.editorStack.getChildren().add(thumbRoot);
-
-            StackPane.setMargin(thumbRoot, new Insets(10));
-            StackPane.setAlignment(thumbRoot, Pos.BOTTOM_RIGHT);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public StackPane getThumbnailStack() {
+        return editorStack;
     }
+    // =========== SETTERS ===========
 
     public void setController(EditorController controller) {
         this.controller = controller;
     }
 
-    // =========== SETTERS ===========
-    
     public void setImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);

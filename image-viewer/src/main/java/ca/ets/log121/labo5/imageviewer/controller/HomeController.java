@@ -12,25 +12,14 @@ import java.io.IOException;
 
 public class HomeController implements Observer {
     HomeView homeView;
-    EditorView editorView;
 
-    public HomeController(HomeView homeView, EditorView editorView) {
+    public HomeController(HomeView homeView) {
         this.homeView = homeView;
-        this.editorView = editorView;
     }
 
     @Override
     public void update(Observable o) {
-        if (o instanceof Image && Manager.getInstance().getEditor().getImage().getPath() != null) {
-            Manager.getInstance().getEditor().getImage().detach(this);
-
-            try {
-                editorView.show();
-            } catch (IOException e) {
-                System.out.println(e);
-                // Nothing else as it means it didn't work and user has to re-try
-            }
-        }
+        // Other classes have reactions but not this one
     }
 
     public void doImport(String filePath) {

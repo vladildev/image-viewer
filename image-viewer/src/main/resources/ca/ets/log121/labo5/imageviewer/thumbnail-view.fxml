@@ -19,6 +19,7 @@
 
     <Rectangle fx:id="viewportRect"
                fill="rgba(0,0,255,0.2)"
+               width="200"
                stroke="blue"
                strokeWidth="2"/>
 
