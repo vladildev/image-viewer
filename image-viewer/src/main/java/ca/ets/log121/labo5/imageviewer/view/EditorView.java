@@ -41,6 +41,7 @@ public class EditorView {
     private TextField translateYInput;
     @FXML
     private StackPane editorStack;
+    @FXML
     private javafx.scene.shape.Rectangle cadre;
     @FXML
     private ComboBox<String> snapshotsComboBox;
@@ -187,22 +188,12 @@ public class EditorView {
      * @param cropHeight New height for visible zone (frame height)
      */
     public void zoomOnImage(int cropWidth, int cropHeight) {
-        if (imageView != null && imageView.getImage() != null) {
-            Image image = imageView.getImage();
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-
-            // Compute zoom factor (relationship between the complete image and crop)
-            double zoomFactorX = imageWidth / cropWidth;
-            double zoomFactorY = imageHeight / cropHeight;
-            double zoomFactor = Math.max(zoomFactorX, zoomFactorY);
-
-            // Apply zoom
-            imageView.setScaleX(zoomFactor);
-            imageView.setScaleY(zoomFactor);
-
-            System.out.println("Zoom applied: crop=" + cropWidth + "x" + cropHeight +
-                             " zoom factor=" + zoomFactor);
+        if (cadre != null) {
+            // Appliquer les nouvelles dimensions au cadre
+            cadre.setWidth(cropWidth);
+            cadre.setHeight(cropHeight);
+            
+            System.out.println("Zoom applied to frame: width=" + cropWidth + " height=" + cropHeight);
         }
     }
     
