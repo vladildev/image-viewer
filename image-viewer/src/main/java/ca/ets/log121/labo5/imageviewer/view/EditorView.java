@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.List;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
 
 public class EditorView {
     private Stage stage;
@@ -36,6 +39,8 @@ public class EditorView {
     private TextField translateYInput;
     @FXML
     private javafx.scene.shape.Rectangle cadre;
+    @FXML
+    private ComboBox<String> snapshotsComboBox;
 
     // ======================================
     
@@ -122,6 +127,13 @@ public class EditorView {
 
         stage.setScene(scene);
         stage.show();
+
+        // Populate snapshots list at startup
+        if (controller != null && snapshotsComboBox != null) {
+            List<String> summaries = controller.getMementoSummaries();
+            snapshotsComboBox.getItems().clear();
+            if (summaries != null) snapshotsComboBox.getItems().addAll(summaries);
+        }
     }
 
     public void setController(EditorController controller) {
@@ -139,7 +151,7 @@ public class EditorView {
             }
         }
     }
-    
+
     /**
      * Apply zoom on image while defining new crop size
      * @param cropWidth New width for visible zone
@@ -150,17 +162,17 @@ public class EditorView {
             Image image = imageView.getImage();
             double imageWidth = image.getWidth();
             double imageHeight = image.getHeight();
-            
+
             // Compute zoom factor (relationship between the complete image and crop)
             double zoomFactorX = imageWidth / cropWidth;
             double zoomFactorY = imageHeight / cropHeight;
             double zoomFactor = Math.max(zoomFactorX, zoomFactorY);
-            
+
             // Apply zoom
             imageView.setScaleX(zoomFactor);
             imageView.setScaleY(zoomFactor);
-            
-            System.out.println("Zoom applied: crop=" + cropWidth + "x" + cropHeight + 
+
+            System.out.println("Zoom applied: crop=" + cropWidth + "x" + cropHeight +
                              " zoom factor=" + zoomFactor);
         }
     }
@@ -207,28 +219,65 @@ public class EditorView {
     // ============ EVENT HANDLERS ============
 
     @FXML
-    public void handleZoom(ActionEvent event) {
+    public void handleZoomIn(ActionEvent event) {
         if (controller != null) {
-            try {
-                controller.doZoom(Double.parseDouble(zoomInput.getText()));
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number: " + zoomInput.getText());
-            }
+            controller.doZoom(1.1);
+        }
+    }
+    @FXML
+    public void handleZoomOut(ActionEvent event) {
+        if (controller != null) {
+            controller.doZoom(0.9);
         }
     }
     
     @FXML
-    public void handleTranslate(ActionEvent event) {
+    public void handleTranslateLeft(ActionEvent event) {
         if (controller != null) {
-            int x = 0;
-            int y = 0;
-            try {
-                x = translateXInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateXInput.getText());
-                y = translateYInput.getText().trim().isEmpty() ? 0 : Integer.parseInt(translateYInput.getText());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number x: " + translateXInput.getText() + ", y: " + translateYInput.getText());
+            controller.doTranslate(-10, 0);
+        }
+    }
+    @FXML
+    public void handleTranslateRight(ActionEvent event) {
+        if (controller != null) {
+            controller.doTranslate(10, 0);
+        }
+    }
+    @FXML
+    public void handleTranslateUp(ActionEvent event) {
+        if (controller != null) {
+            controller.doTranslate(0, 10);
+        }
+    }
+    @FXML
+    public void handleTranslateBottom(ActionEvent event) {
+        if (controller != null) {
+            controller.doTranslate(0, -10);
+        }
+    }
+
+    @FXML
+    public void handleSnapshotSelection(ActionEvent event) {
+        if (controller != null && snapshotsComboBox != null) {
+            int idx = snapshotsComboBox.getSelectionModel().getSelectedIndex();
+            if (idx >= 0) {
+                controller.restoreMementoAt(idx);
             }
-            controller.doTranslate(x, y);
+        }
+    }
+
+    @FXML
+    public void handleSaveSnapshot(ActionEvent event) {
+        if (controller != null) {
+            // Ask controller to create/save a new memento
+            controller.doCreateMemento();
+
+            // Refresh combo box with new summaries
+            if (snapshotsComboBox != null) {
+                List<String> summaries = controller.getMementoSummaries();
+                snapshotsComboBox.getItems().clear();
+                if (summaries != null) snapshotsComboBox.getItems().addAll(summaries);
+            }
         }
     }
     

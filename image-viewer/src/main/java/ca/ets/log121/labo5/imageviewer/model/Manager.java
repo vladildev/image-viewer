@@ -46,6 +46,13 @@ public class Manager {
         return commandHistory;
     }
 
+    /**
+     * Return a copy of mementos stored in the manager.
+     */
+    public java.util.List<Memento> getMementos() {
+        return mementoHistory.getHistory();
+    }
+
 
 
     // =========== METHODS ===========
@@ -155,5 +162,21 @@ public class Manager {
     public void createMemento() {
         Memento memento = editor.createConfigEditorMemento();
         mementoHistory.addMemento(memento);
+    }
+
+    /**
+     * Restore editor state from the provided memento.
+     */
+    public void restoreFromMemento(Memento memento) {
+        if (!(memento instanceof EditorMemento)) return;
+        EditorMemento em = (EditorMemento) memento;
+        Perspective p = em.getPerspective();
+        Perspective current = editor.getPerspective();
+        current.setHeight(p.getHeight());
+        current.setWidth(p.getWidth());
+        current.setX(p.getX());
+        current.setY(p.getY());
+        // notify observers so views update
+        current.notifyObservers();
     }
 }

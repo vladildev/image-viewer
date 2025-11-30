@@ -14,4 +14,12 @@ public class MementoHistory {
     public boolean isEmpty() {
         return history.isEmpty();
     }
+
+    /**
+     * Return a copy of the stored mementos.
+     * The copy prevents external modification of the internal list.
+     */
+    public java.util.List<Memento> getHistory() {
+        return new java.util.ArrayList<Memento>(history);
+    }
 }

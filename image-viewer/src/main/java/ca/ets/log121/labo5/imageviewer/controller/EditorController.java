@@ -2,12 +2,50 @@ package ca.ets.log121.labo5.imageviewer.controller;
 import ca.ets.log121.labo5.imageviewer.model.observer.*;
 import ca.ets.log121.labo5.imageviewer.tools.command.*;
 import ca.ets.log121.labo5.imageviewer.view.EditorView;
+import ca.ets.log121.labo5.imageviewer.model.Manager;
+import ca.ets.log121.labo5.imageviewer.model.memento.Memento;
+import ca.ets.log121.labo5.imageviewer.model.memento.EditorMemento;
+import ca.ets.log121.labo5.imageviewer.model.observer.Perspective;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditorController implements Observer {
     EditorView view;
     
     public EditorController(EditorView view) {
         this.view = view;
+    }
+
+    /**
+     * Return a list of human-readable summaries for each saved memento.
+     * This keeps formatting logic in controller and view receives strings only.
+     */
+    public List<String> getMementoSummaries() {
+        List<String> summaries = new ArrayList<>();
+        List<Memento> mems = Manager.getInstance().getMementos();
+        int idx = 0;
+        for (Memento m : mems) {
+            idx++;
+            if (m instanceof EditorMemento) {
+                EditorMemento em = (EditorMemento) m;
+                java.time.LocalDateTime dt = em.getCreatedAt();
+                String s = dt == null ? (idx + ") [no date]") : dt.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                summaries.add(s);
+            } else {
+                summaries.add(idx + ") [unknown memento]");
+            }
+        }
+        return summaries;
+    }
+
+    /**
+     * Restore the memento at the given index (0-based).
+     */
+    public void restoreMementoAt(int index) {
+        List<Memento> mems = Manager.getInstance().getMementos();
+        if (mems == null) return;
+        if (index < 0 || index >= mems.size()) return;
+        Manager.getInstance().restoreFromMemento(mems.get(index));
     }
 
     public void update(Observable o) {
@@ -49,5 +87,13 @@ public class EditorController implements Observer {
     }
     public void doSaveImage(String filePath){
         Invoker.getInstance().executeCommand(new SaveImageCommand(filePath));
+    }
+
+    /**
+     * Create and store a new memento representing current editor configuration.
+     */
+    public void doCreateMemento(){
+        // Manager handles memento creation/storing
+        Manager.getInstance().createMemento();
     }
 }
