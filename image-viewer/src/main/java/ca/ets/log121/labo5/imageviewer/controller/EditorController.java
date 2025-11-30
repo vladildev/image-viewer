@@ -14,12 +14,13 @@ public class EditorController implements Observer {
 
     public void update(Observable o) {
         if (o instanceof Image){
+            Image img = (Image)o;
             try {
                 view.show();
             } catch (IOException e) {
                 System.out.println(e);
             }
-            view.setImage( ((Image) o).getPath() );
+            view.setImage(img.getPath());
             // Mettre à jour les dimensions du cadre avec les dimensions de l'image
             view.setCadreDimensions(img.getWidth(), img.getHeight());
         } else if (o instanceof Perspective){

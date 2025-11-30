@@ -32,7 +32,6 @@ public class App extends Application {
 
         // MANAGER Components creation
         Manager manager = Manager.getInstance();
-        manager.getEditor().getImage().attach(homeController);
         manager.getEditor().getImage().attach(editorController);
         manager.getEditor().getPerspective().attach(editorController);
         manager.getEditor().getImage().attach(thumbnailController);

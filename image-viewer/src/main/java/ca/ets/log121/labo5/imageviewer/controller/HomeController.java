@@ -19,9 +19,6 @@ public class HomeController implements Observer {
 
     @Override
     public void update(Observable o) {
-        if (o instanceof Image && Manager.getInstance().getEditor().getImage().getPath() != null) {
-            Manager.getInstance().getEditor().getImage().detach(this);
-        }
     }
 
     public void doImport(String filePath) {

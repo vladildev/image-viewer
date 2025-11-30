@@ -47,7 +47,7 @@
     </top>
 
     <center>
-        <StackPane>
+        <StackPane fx:id="editorStack" style="-fx-background-color: white;">
             <ImageView fx:id="imageView"
                        preserveRatio="true"
                        fitWidth="600"
