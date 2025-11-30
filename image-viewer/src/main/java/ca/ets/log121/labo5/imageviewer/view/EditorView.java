@@ -36,7 +36,8 @@ public class EditorView {
     @FXML
     private TextField translateYInput;
     @FXML
-    private StackPane editorStack;;
+    private StackPane editorStack;
+    private javafx.scene.shape.Rectangle cadre;
 
     // ======================================
     
@@ -58,6 +59,68 @@ public class EditorView {
         imageView.setImage(img);
         imageView.setFitWidth(400);
         imageView.setPreserveRatio(true);
+
+        // Capture zoom avec scroll de la souris (Ctrl + scroll)
+        imageView.setOnScroll(event -> {
+            if (event.isControlDown() && controller != null) {
+                double zoomFactor = event.getDeltaY() > 0 ? 1.1 : 0.9;
+                controller.doZoom(zoomFactor);
+                event.consume();
+            }
+        });
+
+        // Capture zoom avec gestes tactiles (pinch to zoom)
+        imageView.setOnZoom(event -> {
+            if (controller != null) {
+                double zoomFactor = event.getZoomFactor();
+                controller.doZoom(zoomFactor);
+                event.consume();
+            }
+        });
+
+        // Variables pour stocker la position initiale du drag
+        final double[] dragStartX = new double[1];
+        final double[] dragStartY = new double[1];
+
+        // Capture le début du drag
+        imageView.setOnMousePressed(event -> {
+            dragStartX[0] = event.getSceneX();
+            dragStartY[0] = event.getSceneY();
+        });
+
+        // Capture le drag (déplacement avec souris enfoncée)
+        imageView.setOnMouseDragged(event -> {
+            if (controller != null) {
+                int deltaX = (int)(event.getSceneX() - dragStartX[0]);
+                int deltaY = (int)(event.getSceneY() - dragStartY[0]);
+                
+                // Mettre à jour la position de départ pour le prochain drag
+                dragStartX[0] = event.getSceneX();
+                dragStartY[0] = event.getSceneY();
+                
+                // Appliquer la translation
+                controller.doTranslate(deltaX, deltaY);
+                event.consume();
+            }
+        });
+
+        // Raccourcis clavier Ctrl+Z (Undo) et Ctrl+Y (Redo)
+        scene.setOnKeyPressed(event -> {
+            if (controller != null && event.isControlDown()) {
+                switch (event.getCode()) {
+                    case Z:
+                        controller.doUndo();
+                        event.consume();
+                        break;
+                    case Y:
+                        controller.doRedo();
+                        event.consume();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         stage.setScene(scene);
         stage.show();
@@ -122,6 +185,23 @@ public class EditorView {
             System.out.println("Translation applied: delta=(" + deltaX + "," + deltaY + 
                              ") new pos=(" + imageView.getTranslateX() + "," + 
                              imageView.getTranslateY() + ")");
+        }
+    }
+    
+    /**
+     * Set the dimensions of the semi-transparent frame (cadre) to match displayed image bounds
+     * @param imageWidth Width of the original image
+     * @param imageHeight Height of the original image
+     */
+    public void setCadreDimensions(int imageWidth, int imageHeight) {
+        if (cadre != null && imageView != null && imageView.getImage() != null) {
+            // Calculer les dimensions affichées de l'image (avec preserveRatio)
+            double displayedWidth = imageView.getBoundsInParent().getWidth();
+            double displayedHeight = imageView.getBoundsInParent().getHeight();
+            
+            cadre.setWidth(displayedWidth);
+            cadre.setHeight(displayedHeight);
+            System.out.println("Cadre dimensions set to displayed size: " + displayedWidth + "x" + displayedHeight);
         }
     }
 

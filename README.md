@@ -2,9 +2,9 @@
 
 ## TODO*
 - [x] HomeView
-- [-Felix] EditorView
+- [x] EditorView
 - [-Felix] ThumnailView
-- [-Loucas] Invoker
+- [x] Invoker
 - [-Vlad] Manager
 - [-Loucas] Liste de commands
 - [x] HomeController
