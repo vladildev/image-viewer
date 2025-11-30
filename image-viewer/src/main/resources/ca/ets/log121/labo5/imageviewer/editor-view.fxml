@@ -67,7 +67,7 @@
                                           strokeWidth="3"
                                           strokeType="INSIDE"
                                           opacity="0.7"
-                                          mouseTransparent="true"/>
+                                          mouseTransparent="false"/>
         </StackPane>
     </center>
 

@@ -2,6 +2,8 @@ package ca.ets.log121.labo5.imageviewer.model.observer;
 
 import java.util.ArrayList;
 
+import ca.ets.log121.labo5.imageviewer.model.Manager;
+
 
 public class Perspective implements Observable {
     private int height, width;
@@ -84,8 +86,9 @@ public class Perspective implements Observable {
     public void zoom(double facteur){
         this.width *= facteur;
         this.height *= facteur;
-        System.out.println(">>> Perspective.zoom() - new size: " + width + "x" + height + " - observers: " + observers.size());
         notifyObservers();
+        System.out.println(">>> Perspective.zoom() - new size: " + width + "x" + height + " - observers: " + observers.size());
+        
     }
     public void translate(int deltaX, int deltaY){
         this.x += deltaX;

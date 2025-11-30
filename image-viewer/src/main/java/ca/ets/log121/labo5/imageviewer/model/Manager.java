@@ -6,6 +6,13 @@ import ca.ets.log121.labo5.imageviewer.model.memento.MementoHistory;
 import ca.ets.log121.labo5.imageviewer.model.observer.Image;
 import ca.ets.log121.labo5.imageviewer.model.observer.Perspective;
 import ca.ets.log121.labo5.imageviewer.tools.command.Command;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.PixelReader;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Manager {
     private static Manager instance;
@@ -63,8 +70,69 @@ public class Manager {
     public void saveConfigToFile(String filePath) {
         // Implementation for saving configuration to file
     }
+    
     public void saveImageToFile(String filePath) {
-        // Implementation for saving image to file
+        try {
+            // Récupérer l'image de base et la perspective
+            Image baseImage = editor.getImage();
+            Perspective perspective = editor.getPerspective();
+            
+            // Vérifier que l'image a été importée
+            if (baseImage.getPath() == null || baseImage.getPath().isEmpty()) {
+                System.err.println("Aucune image n'a été importée.");
+                return;
+            }
+            
+            // Charger l'image JavaFX depuis le chemin
+            javafx.scene.image.Image fxImage = new javafx.scene.image.Image("file:" + baseImage.getPath());
+            
+            // Obtenir les dimensions et position du crop depuis la perspective
+            int cropX, cropY;
+            System.out.println((baseImage.getWidth()/2)+"+ ("+perspective.getX()+"- "+perspective.getWidth()/2+")");
+            System.out.println((baseImage.getHeight()/2)+"+ ("+perspective.getY()+"- "+perspective.getHeight()/2+")");
+
+            cropX = (baseImage.getWidth()/2) + (perspective.getX()*3- (perspective.getWidth()/2)*3); ;
+            cropY = (baseImage.getHeight()/2) + (perspective.getY()*3- (perspective.getHeight()/2)*3); ;
+            cropX = Math.max(0, cropX);
+            cropY = Math.max(0, cropY);
+            System.out.println("Crop X: " + cropX + ", Crop Y: " + cropY);
+            //int cropY = perspective.getY() + (baseImage.getHeight() - perspective.getHeight()) / 2;
+            int cropWidth = perspective.getWidth()*3;
+            int cropHeight = perspective.getHeight()*3;
+            
+            // Créer une WritableImage avec les dimensions du crop
+            WritableImage croppedImage = new WritableImage(cropWidth, cropHeight);
+            PixelReader pixelReader = fxImage.getPixelReader();
+            
+            // Copier les pixels de la zone croppée
+            croppedImage.getPixelWriter().setPixels(0, 0, cropWidth, cropHeight, 
+                                                     pixelReader, cropX, cropY);
+            
+            // Convertir en BufferedImage pour sauvegarder
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
+            
+            // Déterminer le format du fichier depuis l'extension
+            String format = "png"; // Format par défaut
+            if (filePath.toLowerCase().endsWith(".jpg") || filePath.toLowerCase().endsWith(".jpeg")) {
+                format = "jpg";
+            } else if (filePath.toLowerCase().endsWith(".bmp")) {
+                format = "bmp";
+            }
+            
+            // Sauvegarder l'image croppée
+            File outputFile = new File(filePath);
+            ImageIO.write(bufferedImage, format, outputFile);
+            
+            System.out.println("Image sauvegardée avec succès: " + filePath);
+            System.out.println("Dimensions du crop: " + cropWidth + "x" + cropHeight + " à partir de (" + cropX + ", " + cropY + ")");
+            
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde de l'image: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erreur inattendue: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void createMemento() {
