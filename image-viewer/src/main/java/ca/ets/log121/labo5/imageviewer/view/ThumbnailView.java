@@ -19,9 +19,6 @@ public class ThumbnailView {
 
     @FXML
     private ImageView thumbnailImage;
-    @FXML
-    private Rectangle viewportRect;
-
     private StackPane editorStack;
 
     public void setImage(String imagePath) {
@@ -52,10 +49,23 @@ public class ThumbnailView {
         }
     }
 
-    public void translateOnZone() {
-    }
-
-    public void zoomOnZone() {
+    /**
+     * Update the thumbnail to show what would be saved
+     * @param cropX X position of the crop in the original image
+     * @param cropY Y position of the crop in the original image
+     * @param cropWidth Width of the crop zone
+     * @param cropHeight Height of the crop zone
+     */
+    public void updateCropPreview(int cropX, int cropY, int cropWidth, int cropHeight) {
+        if (thumbnailImage != null && thumbnailImage.getImage() != null) {
+            // Create a viewport to display only the zone that would be saved
+            javafx.geometry.Rectangle2D viewport = new javafx.geometry.Rectangle2D(
+                cropX, cropY, cropWidth, cropHeight
+            );
+            thumbnailImage.setViewport(viewport);
+            
+            System.out.println("Thumbnail updated: crop=(" + cropX + "," + cropY + ") size=" + cropWidth + "x" + cropHeight);
+        }
     }
 
     public void setParentStack(StackPane editorStack) {

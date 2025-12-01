@@ -177,23 +177,23 @@ public class Manager {
             
             // Charger l'image JavaFX depuis le chemin
             javafx.scene.image.Image fxImage = new javafx.scene.image.Image("file:" + baseImage.getPath());
-            double factor = baseImage.getWidth()/600.0;
-            System.out.println("Factor: " + factor);
+            double factorX = baseImage.getWidth()/600.0;
+            double factorY = baseImage.getHeight() / (600.0 * baseImage.getHeight() / baseImage.getWidth() );
+            System.out.println("Factor X: " + factorX + ", Factor Y: " + factorY);
             // Obtenir les dimensions et position du crop depuis la perspective
             int cropX, cropY;
             System.out.println((baseImage.getWidth()/2)+"+ ("+perspective.getX()+"- "+perspective.getWidth()/2+")");
             System.out.println((baseImage.getHeight()/2)+"+ ("+perspective.getY()+"- "+perspective.getHeight()/2+")");
 
-            cropX = (baseImage.getWidth()/2) + ((int) (perspective.getX()*factor) - (int) (perspective.getWidth()*factor/2.0)); ;
-            cropY = (baseImage.getHeight()/2) + ((int) (perspective.getY()*factor) - (int) (perspective.getHeight()*factor/2.0)); ;
+            cropX = (baseImage.getWidth()/2) + ((int) (perspective.getX()*factorX) - (int) (perspective.getWidth()*factorX/2.0)); ;
+            cropY = (baseImage.getHeight()/2) + ((int) (perspective.getY()*factorY) - (int) (perspective.getHeight()*factorY/2.0)); ;
             cropX = Math.max(0, cropX);
             cropY = Math.max(0, cropY);
             System.out.println("Crop X: " + cropX + ", Crop Y: " + cropY);
             //int cropY = perspective.getY() + (baseImage.getHeight() - perspective.getHeight()) / 2;
             
-            System.out.println("Crop Width: " + (perspective.getWidth()*factor) + ", Crop Height: " + (perspective.getHeight()*factor));
-            int cropWidth = (int) (perspective.getWidth()*factor);
-            int cropHeight = (int) (perspective.getHeight()*factor);
+            int cropWidth = (int) (perspective.getWidth()*factorX);
+            int cropHeight = (int) (perspective.getHeight()*factorY);
             
             // Créer une WritableImage avec les dimensions du crop
             WritableImage croppedImage = new WritableImage(cropWidth, cropHeight);
