@@ -16,8 +16,8 @@
                     <MenuItem text="Import Image" onAction="#handleImportImage"/>
                     <MenuItem text="Save Image" onAction="#handleSaveImage"/>
                     <SeparatorMenuItem/>
-                    <MenuItem text="Load Config" onAction="#handleImportConfig"/>
-                    <MenuItem text="Save Config" onAction="#handleSaveConfig"/>
+                    <!--<MenuItem text="Load Config" onAction="#handleImportConfig"/>
+                    <MenuItem text="Save Config" onAction="#handleSaveConfig"/>-->
                 </items>
             </MenuButton>
 

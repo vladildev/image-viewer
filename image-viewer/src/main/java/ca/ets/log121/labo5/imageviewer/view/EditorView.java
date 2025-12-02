@@ -234,13 +234,13 @@ public class EditorView {
     @FXML
     public void handleZoomIn(ActionEvent event) {
         if (controller != null) {
-            controller.doZoom(1.1);
+            controller.doZoom(0.9);
         }
     }
     @FXML
     public void handleZoomOut(ActionEvent event) {
         if (controller != null) {
-            controller.doZoom(0.9);
+            controller.doZoom(1.1);
         }
     }
     
@@ -259,13 +259,13 @@ public class EditorView {
     @FXML
     public void handleTranslateUp(ActionEvent event) {
         if (controller != null) {
-            controller.doTranslate(0, 10);
+            controller.doTranslate(0, -10);
         }
     }
     @FXML
     public void handleTranslateBottom(ActionEvent event) {
         if (controller != null) {
-            controller.doTranslate(0, -10);
+            controller.doTranslate(0, 10);
         }
     }
 
