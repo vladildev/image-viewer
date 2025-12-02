@@ -1,10 +1,10 @@
 # Image Viewer
 
-Application JavaFX de visualisation et d'edition d'images developpee dans le cadre du cours LOG121 - Conception orientee objet a l'Ecole de technologie superieure (ETS).
+Application JavaFX de visualisation et d'edition d'images developpee dans le cadre du cours LOG121 - Conception orientee objet à l'Ecole de Technologie Superieure (ETS) de Montréal, Canada.
 
 ## Description
 
-Image Viewer est une application desktop permettant de visualiser, editer et manipuler des images avec des fonctionnalites de zoom, translation et recadrage. L'application met en oeuvre plusieurs patrons de conception (design patterns) etudies dans le cours.
+Image Viewer est un logiciel permettant de visualiser, éditer et manipuler des images avec des fonctionnalites de zoom, translation et recadrage. L'application met en oeuvre plusieurs patrons de conception (design patterns) etudies dans le cours.
 
 ### Fonctionnalites
 
@@ -126,14 +126,10 @@ La documentation sera generee dans `target/reports/apidocs/`.
 ## Auteurs
 
 Projet realise par :
-- Vladimir Music-Kabuya
-- Felix [Nom]
-- Loucas [Nom]
+- @vladildev
+- @macanec
+- @loucasbrl
 
 Cours LOG121 - Conception orientee objet  
 Ecole de technologie superieure (ETS)  
 Session Automne 2025
-
-## Licence
-
-Ce projet a ete developpe dans un cadre academique.
