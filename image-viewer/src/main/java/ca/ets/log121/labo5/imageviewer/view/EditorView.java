@@ -24,34 +24,82 @@ import java.util.List;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 
+/**
+ * Vue principale de l'éditeur d'images.
+ *
+ * Cette classe gère l'interface utilisateur de l'édition d'images.
+ * Elle permet de :
+ * <ul>
+ *   <li>Afficher et manipuler une image (zoom, translation)</li>
+ *   <li>Importer et exporter des images</li>
+ *   <li>Sauvegarder et charger des configurations</li>
+ *   <li>Gérer les instantanés (snapshots) de configuration</li>
+ *   <li>Effectuer des opérations Undo/Redo</li>
+ * </ul>
+ * </p>
+ * <p>
+ * L'interface prend en charge les interactions souris (drag pour translation,
+ * Ctrl+scroll pour zoom) et les raccourcis clavier (Ctrl+Z pour Undo,
+ * Ctrl+Y pour Redo).
+ * </p>
+ * 
+ * @author LOG121 - Labo 5
+ * @version 1.0
+ * @see EditorController
+ */
 public class EditorView {
+    /** La fenêtre principale de l'application. */
     private Stage stage;
+    /** Le contrôleur associé à cette vue. */
     private EditorController controller;
+    /** Sélecteur de fichiers pour l'import/export. */
     private FileChooser fileChooser = new FileChooser();
     
 
     // =========== FXML COMPONENTS ===========
+    /** Composant FXML pour afficher l'image. */
     @FXML
     private ImageView imageView;
+    /** Champ de saisie pour le zoom. */
     @FXML
     private TextField zoomInput;
+    /** Champ de saisie pour la translation X. */
     @FXML
     private TextField translateXInput;
+    /** Champ de saisie pour la translation Y. */
     @FXML
     private TextField translateYInput;
+    /** Conteneur principal pour l'empilement des éléments. */
     @FXML
     private StackPane editorStack;
+    /** Rectangle représentant le cadre de sélection/recadrage. */
     @FXML
     private javafx.scene.shape.Rectangle cadre;
+    /** Liste déroulante pour les instantanés de configuration. */
     @FXML
     private ComboBox<String> snapshotsComboBox;
 
     // ======================================
     
+    /**
+     * Constructeur de la vue d'édition.
+     * 
+     * @param stage la fenêtre principale de l'application
+     */
     public EditorView(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Affiche la vue d'édition avec l'image actuellement chargée.
+     * <p>
+     * Cette méthode charge le fichier FXML, configure tous les gestionnaires
+     * d'événements (scroll pour zoom, drag pour translation, raccourcis clavier)
+     * et affiche la fenêtre.
+     * </p>
+     * 
+     * @throws IOException si le chargement du fichier FXML échoue
+     */
     public void show() throws IOException {
         FXMLLoader loader = new FXMLLoader(
             getClass().getResource("/ca/ets/log121/labo5/imageviewer/editor-view.fxml")
@@ -163,15 +211,30 @@ public class EditorView {
         }
     }
 
+    /**
+     * Retourne le conteneur principal pour l'intégration de la miniature.
+     * 
+     * @return le StackPane de l'éditeur
+     */
     public StackPane getThumbnailStack() {
         return editorStack;
     }
     // =========== SETTERS ===========
 
+    /**
+     * Définit le contrôleur de cette vue.
+     * 
+     * @param controller le contrôleur à associer
+     */
     public void setController(EditorController controller) {
         this.controller = controller;
     }
 
+    /**
+     * Définit l'image à afficher dans l'éditeur.
+     * 
+     * @param imagePath le chemin du fichier image
+     */
     public void setImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
@@ -183,9 +246,14 @@ public class EditorView {
     }
 
     /**
-     * Apply zoom on the frame (cadre) by changing its size
-     * @param cropWidth New width for visible zone (frame width)
-     * @param cropHeight New height for visible zone (frame height)
+     * Applique un zoom sur le cadre en modifiant ses dimensions.
+     * <p>
+     * Cette méthode met à jour les dimensions du rectangle de sélection
+     * pour refléter le niveau de zoom actuel.
+     * </p>
+     * 
+     * @param cropWidth nouvelle largeur de la zone visible (largeur du cadre)
+     * @param cropHeight nouvelle hauteur de la zone visible (hauteur du cadre)
      */
     public void zoomOnImage(int cropWidth, int cropHeight) {
         if (cadre != null) {
@@ -198,9 +266,13 @@ public class EditorView {
     }
     
     /**
-     * Translate the frame (cadre) to new position
-     * @param deltaX horizontal translation (positive = right, négative = left)
-     * @param deltaY Vertical translation (positive = down, négative = up)
+     * Applique une translation sur le cadre.
+     * <p>
+     * Cette méthode déplace le rectangle de sélection à la nouvelle position.
+     * </p>
+     * 
+     * @param deltaX translation horizontale (positif = droite, négatif = gauche)
+     * @param deltaY translation verticale (positif = bas, négatif = haut)
      */
     public void translateOnImage(int deltaX, int deltaY) {
         if (cadre != null) {
@@ -213,9 +285,10 @@ public class EditorView {
     }
     
     /**
-     * Set the dimensions of the semi-transparent frame (cadre)
-     * @param width Width of the frame
-     * @param height Height of the frame
+     * Définit les dimensions du cadre semi-transparent.
+     * 
+     * @param width la largeur du cadre
+     * @param height la hauteur du cadre
      */
     public void setCadreDimensions(int width, int height) {
         if (cadre != null) {
@@ -231,12 +304,23 @@ public class EditorView {
 
     // ============ EVENT HANDLERS ============
 
+    /**
+     * Gère l'action de zoom avant (agrandir la vue).
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleZoomIn(ActionEvent event) {
         if (controller != null) {
             controller.doZoom(0.9);
         }
     }
+
+    /**
+     * Gère l'action de zoom arrière (réduire la vue).
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleZoomOut(ActionEvent event) {
         if (controller != null) {
@@ -244,24 +328,47 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action de translation vers la gauche.
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleTranslateLeft(ActionEvent event) {
         if (controller != null) {
             controller.doTranslate(-10, 0);
         }
     }
+
+    /**
+     * Gère l'action de translation vers la droite.
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleTranslateRight(ActionEvent event) {
         if (controller != null) {
             controller.doTranslate(10, 0);
         }
     }
+
+    /**
+     * Gère l'action de translation vers le haut.
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleTranslateUp(ActionEvent event) {
         if (controller != null) {
             controller.doTranslate(0, -10);
         }
     }
+
+    /**
+     * Gère l'action de translation vers le bas.
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleTranslateBottom(ActionEvent event) {
         if (controller != null) {
@@ -269,6 +376,14 @@ public class EditorView {
         }
     }
 
+    /**
+     * Gère la sélection d'un instantané dans la liste déroulante.
+     * <p>
+     * Restaure la configuration de l'instantané sélectionné.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleSnapshotSelection(ActionEvent event) {
         if (controller != null && snapshotsComboBox != null) {
@@ -279,6 +394,14 @@ public class EditorView {
         }
     }
 
+    /**
+     * Gère l'action de sauvegarde d'un instantané.
+     * <p>
+     * Crée un nouveau memento et met à jour la liste déroulante.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleSaveSnapshot(ActionEvent event) {
         if (controller != null) {
@@ -294,6 +417,14 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action d'importation d'une image.
+     * <p>
+     * Ouvre un sélecteur de fichiers pour choisir une image à importer.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleImportImage(ActionEvent event) {
         if (controller != null) {
@@ -311,6 +442,15 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action de sauvegarde de l'image recadrée.
+     * <p>
+     * Ouvre un sélecteur de fichiers pour choisir la destination
+     * et sauvegarde la zone visible de l'image.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleSaveImage(ActionEvent event) {
         if (controller != null) {
@@ -327,6 +467,15 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action d'importation d'une configuration.
+     * <p>
+     * Ouvre un sélecteur de fichiers pour choisir un fichier JSON
+     * contenant une configuration à charger.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleImportConfig(ActionEvent event) {
         if (controller != null) {
@@ -342,6 +491,15 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action de sauvegarde de la configuration.
+     * <p>
+     * Ouvre un sélecteur de fichiers pour choisir la destination
+     * et sauvegarde la configuration actuelle en JSON.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleSaveConfig(ActionEvent event) {
         if (controller != null) {
@@ -358,6 +516,14 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action d'annulation (Undo).
+     * <p>
+     * Annule la dernière action effectuée.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleUndo(ActionEvent event) {
         if (controller != null) {
@@ -365,6 +531,14 @@ public class EditorView {
         }
     }
     
+    /**
+     * Gère l'action de rétablissement (Redo).
+     * <p>
+     * Rétablit la dernière action annulée.
+     * </p>
+     * 
+     * @param event l'événement d'action déclencheur
+     */
     @FXML
     public void handleRedo(ActionEvent event) {
         if (controller != null) {

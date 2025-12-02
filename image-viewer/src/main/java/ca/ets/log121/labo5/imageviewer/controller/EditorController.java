@@ -11,16 +11,49 @@ import java.util.List;
 
 import java.io.IOException;
 
+/**
+ * Contrôleur principal pour la vue d'édition d'images.
+ *
+ * Cette classe implémente le patron Observer pour recevoir les notifications
+ * de changements d'état de l'image et de la perspective. Elle gère toutes
+ * les interactions utilisateur liées à l'édition d'images, notamment :
+ * <ul>
+ *   <li>Zoom sur l'image</li>
+ *   <li>Translation (déplacement) de la zone visible</li>
+ *   <li>Annulation (Undo) et rétablissement (Redo) des actions</li>
+ *   <li>Sauvegarde et chargement de configurations</li>
+ *   <li>Import et export d'images</li>
+ *   <li>Gestion des mementos (instantanés de l'état)</li>
+ * </ul>
+ *
+ * 
+ * @author LOG121 - Labo 5
+ * @version 1.0
+ * @see Observer
+ * @see EditorView
+ * @see Invoker
+ */
 public class EditorController implements Observer {
+    /** La vue d'édition associée à ce contrôleur. */
     EditorView view;
     
+    /**
+     * Constructeur du contrôleur d'édition.
+     * 
+     * @param view la vue d'édition à contrôler
+     */
     public EditorController(EditorView view) {
         this.view = view;
     }
 
     /**
-     * Return a list of human-readable summaries for each saved memento.
-     * This keeps formatting logic in controller and view receives strings only.
+     * Retourne une liste de résumés lisibles pour chaque memento sauvegardé.ardé.
+     * <p>
+     * Cette méthode garde la logique de formatage dans le contrôleur,
+     * la vue ne reçoit que des chaînes de caractères.
+     * </p>
+     * 
+     * @return une liste de chaînes décrivant chaque memento avec sa date de création
      */
     public List<String> getMementoSummaries() {
         List<String> summaries = new ArrayList<>();
@@ -41,7 +74,13 @@ public class EditorController implements Observer {
     }
 
     /**
-     * Restore the memento at the given index (0-based).
+     * Restaure le memento à l'index donné.
+     * <p>
+     * L'index est basé sur 0 (le premier élément est à l'index 0).
+     * Si l'index est invalide, aucune action n'est effectuée.
+     * </p>
+     * 
+     * @param index l'index du memento à restaurer (basé sur 0)
      */
     public void restoreMementoAt(int index) {
         List<Memento> mems = Manager.getInstance().getMementos();
@@ -50,6 +89,15 @@ public class EditorController implements Observer {
         Manager.getInstance().restoreFromMemento(mems.get(index));
     }
 
+    /**
+     * Met à jour la vue en réponse à un changement d'état observé.
+     * <p>
+     * Cette méthode est appelée automatiquement lorsqu'un objet observé
+     * (Image ou Perspective) notifie ses observateurs d'un changement.
+     * </p>
+     * 
+     * @param o l'objet observable qui a changé d'état
+     */
     public void update(Observable o) {
         if (o instanceof Image){
             Image img = (Image)o;
@@ -71,33 +119,81 @@ public class EditorController implements Observer {
         
     }
 
+    /**
+     * Exécute une commande de zoom sur l'image.
+     * 
+     * @param factor le facteur de zoom (supérieur à 1 pour agrandir, inférieur à 1 pour réduire)
+     */
     public void doZoom(double factor){
         Invoker.getInstance().executeCommand(new ZoomCommand(factor));
     }
+
+    /**
+     * Exécute une commande de translation (déplacement) de la zone visible.
+     * 
+     * @param deltaX le déplacement horizontal en pixels (positif vers la droite)
+     * @param deltaY le déplacement vertical en pixels (positif vers le bas)
+     */
     public void doTranslate(int deltaX, int deltaY){
         Invoker.getInstance().executeCommand(new TranslateCommand(deltaX, deltaY));
     }
+
+    /**
+     * Exécute une commande d'annulation (Undo) de la dernière action.
+     */
     public void doUndo(){
         Invoker.getInstance().executeCommand(new UndoCommand());
     }
+
+    /**
+     * Exécute une commande de rétablissement (Redo) de la dernière action annulée.
+     */
     public void doRedo(){
         Invoker.getInstance().executeCommand(new RedoCommand());
     }
+
+    /**
+     * Sauvegarde la configuration actuelle dans un fichier.
+     * 
+     * @param filePath le chemin du fichier de destination
+     */
     public void doSaveConfigFile(String filePath){
         Invoker.getInstance().executeCommand(new SaveConfigFileCommand(filePath));
     }
+
+    /**
+     * Charge une configuration depuis un fichier.
+     * 
+     * @param filePath le chemin du fichier de configuration à charger
+     */
     public void doLoadConfigFile(String filePath){
         Invoker.getInstance().executeCommand(new LoadConfigFileCommand(filePath));
     }
+
+    /**
+     * Importe une image depuis un fichier.
+     * 
+     * @param filePath le chemin de l'image à importer
+     */
     public void doImportImage(String filePath){
         Invoker.getInstance().executeCommand(new ImportImageCommand(filePath));
     }
+
+    /**
+     * Sauvegarde l'image éditée (zone recadrée) dans un fichier.
+     * 
+     * @param filePath le chemin du fichier de destination
+     */
     public void doSaveImage(String filePath){
         Invoker.getInstance().executeCommand(new SaveImageCommand(filePath));
     }
 
     /**
-     * Create and store a new memento representing current editor configuration.
+     * Crée et stocke un nouveau memento représentant la configuration actuelle de l'éditeur.
+     * <p>
+     * Le memento sauvegarde l'état actuel de la perspective (zoom et position)
+     * pour permettre une restauration ultérieure.
+     * </p>
      */
     public void doCreateMemento(){
         // Manager handles memento creation/storing

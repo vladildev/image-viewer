@@ -14,13 +14,33 @@ import javafx.scene.shape.Rectangle;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Vue miniature affichant une prévisualisation de l'image.
+ * <p>
+ * Cette classe affiche une miniature de l'image avec la zone de recadrage
+ * actuelle, permettant à l'utilisateur de voir ce qui sera sauvegardé.
+ * Elle est intégrée dans la vue d'édition principale.
+ * </p>
+ * 
+ * @author LOG121 - Labo 5
+ * @version 1.0
+ * @see ThumbnailController
+ */
 public class ThumbnailView {
+    /** Le contrôleur associé à cette vue. */
     ThumbnailController thumbnailController;
 
+    /** Composant FXML pour afficher l'image miniature. */
     @FXML
     private ImageView thumbnailImage;
+    /** Référence vers le conteneur parent dans la vue éditeur. */
     private StackPane editorStack;
 
+    /**
+     * Définit l'image à afficher dans la miniature.
+     * 
+     * @param imagePath le chemin du fichier image
+     */
     public void setImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File file = new File(imagePath);
@@ -31,6 +51,13 @@ public class ThumbnailView {
         }
     }
 
+    /**
+     * Affiche la vue miniature.
+     * <p>
+     * Charge le fichier FXML et ajoute la miniature au conteneur parent
+     * dans le coin inférieur droit.
+     * </p>
+     */
     public void show() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -50,11 +77,16 @@ public class ThumbnailView {
     }
 
     /**
-     * Update the thumbnail to show what would be saved
-     * @param cropX X position of the crop in the original image
-     * @param cropY Y position of the crop in the original image
-     * @param cropWidth Width of the crop zone
-     * @param cropHeight Height of the crop zone
+     * Met à jour la miniature pour afficher la zone qui sera sauvegardée.
+     * <p>
+     * Cette méthode configure le viewport de l'ImageView pour afficher
+     * uniquement la zone de recadrage spécifiée.
+     * </p>
+     * 
+     * @param cropX la position X du recadrage dans l'image originale
+     * @param cropY la position Y du recadrage dans l'image originale
+     * @param cropWidth la largeur de la zone de recadrage
+     * @param cropHeight la hauteur de la zone de recadrage
      */
     public void updateCropPreview(int cropX, int cropY, int cropWidth, int cropHeight) {
         if (thumbnailImage != null && thumbnailImage.getImage() != null) {
@@ -68,9 +100,20 @@ public class ThumbnailView {
         }
     }
 
+    /**
+     * Définit le conteneur parent de la miniature.
+     * 
+     * @param editorStack le StackPane de la vue éditeur
+     */
     public void setParentStack(StackPane editorStack) {
         this.editorStack = editorStack;
     }
+
+    /**
+     * Définit le contrôleur de cette vue.
+     * 
+     * @param thumbnailController le contrôleur à associer
+     */
     public void setThumbnailController(ThumbnailController thumbnailController) {
         this.thumbnailController = thumbnailController;
     }

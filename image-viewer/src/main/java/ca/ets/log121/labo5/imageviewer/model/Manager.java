@@ -23,12 +23,43 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Gestionnaire principal de l'application implémentant le patron Singleton.
+ * <p>
+ * Cette classe centralise la gestion de l'application et fournit accès
+ * à l'éditeur, l'historique des commandes et l'historique des mementos.
+ * Elle offre également les fonctionnalités principales de l'application :
+ * <ul>
+ *   <li>Undo/Redo - annulation et rétablissement des actions</li>
+ *   <li>Sauvegarde et chargement de configurations (fichiers JSON)</li>
+ *   <li>Sauvegarde d'images recadrées</li>
+ *   <li>Gestion des mementos pour les instantanés de configuration</li>
+ * </ul>
+ * </p>
+ * 
+ * @author LOG121 - Labo 5
+ * @version 1.0
+ * @see Editor
+ * @see CommandHistory
+ * @see MementoHistory
+ */
 public class Manager {
+    /** L'instance unique du Manager (patron Singleton). */
     private static Manager instance;
+    /** L'éditeur d'images. */
     private Editor editor;
+    /** L'historique des mementos. */
     private MementoHistory mementoHistory;
+    /** L'historique des commandes. */
     private CommandHistory commandHistory;
 
+    /**
+     * Constructeur privé du Manager.
+     * <p>
+     * Initialise l'éditeur avec une image et une perspective par défaut,
+     * ainsi que les historiques des mementos et des commandes.
+     * </p>
+     */
     private Manager() {
         Image image = new Image(3000, 3000);
         Perspective perspective = new Perspective(3000, 3000, 0, 0);
@@ -40,21 +71,46 @@ public class Manager {
 
     // =========== GETTERS ===========
 
+    /**
+     * Retourne l'instance unique du Manager.
+     * <p>
+     * Si l'instance n'existe pas encore, elle est créée.
+     * </p>
+     * 
+     * @return l'instance unique du Manager
+     */
     public static Manager getInstance() {
         if (instance == null) {
             instance = new Manager();
         }
         return instance;
     }
+
+    /**
+     * Retourne l'éditeur d'images.
+     * 
+     * @return l'éditeur
+     */
     public Editor getEditor() {
         return editor;
     }
+
+    /**
+     * Retourne l'historique des commandes.
+     * 
+     * @return l'historique des commandes
+     */
     public CommandHistory getCommandHistory() {
         return commandHistory;
     }
 
     /**
-     * Return a copy of mementos stored in the manager.
+     * Retourne une copie des mementos stockés dans le gestionnaire.
+     * <p>
+     * La copie empêche la modification externe de la liste interne.
+     * </p>
+     * 
+     * @return une liste contenant les mementos sauvegardés
      */
     public java.util.List<Memento> getMementos() {
         return mementoHistory.getHistory();
@@ -64,6 +120,13 @@ public class Manager {
 
     // =========== METHODS ===========
 
+    /**
+     * Annule la dernière commande exécutée.
+     * <p>
+     * Si une annulation est possible, la commande précédente est récupérée
+     * depuis l'historique et sa méthode {@code undo()} est appelée.
+     * </p>
+     */
     public void undo() {
         if(commandHistory.canUndo()){
             System.out.println("UNDO - Index avant: " + commandHistory.getIterator().getIndex());
@@ -72,6 +135,14 @@ public class Manager {
             command.undo();
         }
     }
+
+    /**
+     * Rétablit la dernière commande annulée.
+     * <p>
+     * Si un rétablissement est possible, la commande suivante est récupérée
+     * depuis l'historique et sa méthode {@code execute()} est appelée.
+     * </p>
+     */
     public void redo() {
         if(commandHistory.canRedo()){
             System.out.println("REDO - Index avant: " + commandHistory.getIterator().getIndex());
@@ -80,6 +151,16 @@ public class Manager {
             command.execute();
         }
     }
+
+    /**
+     * Restaure la configuration de l'éditeur depuis un fichier JSON.
+     * <p>
+     * Le fichier doit contenir un objet JSON avec les propriétés
+     * height, width, x et y représentant l'état de la perspective.
+     * </p>
+     * 
+     * @param filePath le chemin du fichier de configuration à charger
+     */
     public void restoreConfigFromFile(String filePath) {
         File in = new File(filePath);
         if (!in.exists()) {
@@ -137,6 +218,16 @@ public class Manager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sauvegarde la configuration actuelle de l'éditeur dans un fichier JSON.
+     * <p>
+     * Le fichier contiendra un objet JSON avec les propriétés
+     * height, width, x et y représentant l'état actuel de la perspective.
+     * </p>
+     * 
+     * @param filePath le chemin du fichier de destination
+     */
     public void saveConfigToFile(String filePath) {
         Memento configFile = editor.createConfigEditorMemento();
         if (!(configFile instanceof EditorMemento)) {
@@ -163,6 +254,16 @@ public class Manager {
         }
     }
     
+    /**
+     * Sauvegarde l'image recadrée dans un fichier.
+     * <p>
+     * Cette méthode calcule la zone de recadrage à partir de la perspective
+     * actuelle et sauvegarde uniquement cette portion de l'image originale.
+     * Les formats supportés sont PNG, JPG/JPEG et BMP.
+     * </p>
+     * 
+     * @param filePath le chemin du fichier de destination avec l'extension
+     */
     public void saveImageToFile(String filePath) {
         try {
             // Récupérer l'image de base et la perspective
@@ -230,13 +331,27 @@ public class Manager {
         }
     }
 
+    /**
+     * Crée et stocke un nouveau memento de l'état actuel de l'éditeur.
+     * <p>
+     * Le memento est ajouté à l'historique des mementos pour permettre
+     * une restauration ultérieure.
+     * </p>
+     */
     public void createMemento() {
         Memento memento = editor.createConfigEditorMemento();
         mementoHistory.addMemento(memento);
     }
 
     /**
-     * Restore editor state from the provided memento.
+     * Restaure l'état de l'éditeur à partir d'un memento.
+     * <p>
+     * Cette méthode restaure la perspective (dimensions et position)
+     * depuis le memento fourni et notifie les observateurs pour
+     * mettre à jour les vues.
+     * </p>
+     * 
+     * @param memento le memento contenant l'état à restaurer
      */
     public void restoreFromMemento(Memento memento) {
         if (!(memento instanceof EditorMemento)) return;

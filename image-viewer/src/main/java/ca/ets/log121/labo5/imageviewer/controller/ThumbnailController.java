@@ -7,18 +7,44 @@ import ca.ets.log121.labo5.imageviewer.model.observer.Observer;
 import ca.ets.log121.labo5.imageviewer.model.observer.Perspective;
 import ca.ets.log121.labo5.imageviewer.view.*;
 
+/**
+ * Contrôleur pour la vue miniature (thumbnail) de l'image.
+ * <p>
+ * Cette classe gère l'affichage d'une prévisualisation de l'image
+ * montrant la zone qui sera sauvegardée. Elle implémente le patron Observer
+ * pour mettre à jour automatiquement la miniature lorsque l'image
+ * ou la perspective change.
+ * </p>
+ * 
+ * @author LOG121 - Labo 5
+ * @version 1.0
+ * @see Observer
+ * @see ThumbnailView
+ */
 public class ThumbnailController implements Observer {
+    /** La vue miniature associée à ce contrôleur. */
     ThumbnailView view;
+    /** La vue éditeur parente. */
     EditorView editorView;
 
+    /**
+     * Constructeur du contrôleur de miniature.
+     * 
+     * @param thumbnailView la vue miniature à contrôler
+     * @param editorView la vue éditeur parente
+     */
     public ThumbnailController(ThumbnailView thumbnailView, EditorView editorView) {
         this.view = thumbnailView;
         this.editorView = editorView;
     }
 
     /**
-     * Calculate crop coordinates from perspective and image data
-     * Uses the same logic as Manager.saveImageToFile
+     * Calcule et met à jour les coordonnées de la zone de recadrage.
+     * <p>
+     * Utilise la même logique que {@link Manager#saveImageToFile(String)}
+     * pour calculer les coordonnées du recadrage à partir des données
+     * de la perspective et de l'image.
+     * </p>
      */
     private void updateCropPreview() {
         Image baseImage = Manager.getInstance().getEditor().getImage();
@@ -45,6 +71,16 @@ public class ThumbnailController implements Observer {
         view.updateCropPreview(cropX, cropY, cropWidth, cropHeight);
     }
 
+    /**
+     * Met à jour la vue en réponse à un changement d'état observé.
+     * <p>
+     * Cette méthode est appelée automatiquement lorsqu'un objet observé
+     * (Image ou Perspective) notifie ses observateurs d'un changement.
+     * Elle met à jour la miniature pour refléter la zone de recadrage actuelle.
+     * </p>
+     * 
+     * @param o l'objet observable qui a changé d'état
+     */
     @Override
     public void update(Observable o) {
         if (o instanceof Image) {
