@@ -1,32 +1,76 @@
 # Image Viewer
 
-Application JavaFX de visualisation et d'edition d'images developpee dans le cadre du cours LOG121 - Conception orientee objet à l'Ecole de Technologie Superieure (ETS) de Montréal, Canada.
+Application JavaFX de visualisation et d'édition d'images développée dans le cadre du cours LOG121 - Conception orientée objet à l'École de Technologie Supérieure (ÉTS) de Montréal, Canada.
 
 ## Description
 
-Image Viewer est un logiciel permettant de visualiser, éditer et manipuler des images avec des fonctionnalites de zoom, translation et recadrage. L'application met en oeuvre plusieurs patrons de conception (design patterns) etudies dans le cours.
+Image Viewer est un logiciel de bureau permettant de visualiser, éditer et manipuler des images avec des fonctionnalités avancées de zoom, translation et recadrage. L'application met en œuvre plusieurs patrons de conception (design patterns) étudiés dans le cours, démontrant les bonnes pratiques de génie logiciel.
 
-### Fonctionnalites
+### Fonctionnalités
 
-- **Importation d'images** : Support des formats PNG, JPG et GIF
-- **Zoom** : Agrandissement et reduction de la zone visible (molette + Ctrl ou boutons)
-- **Translation** : Deplacement de la zone visible par glisser-deposer ou boutons
-- **Sauvegarde d'image** : Export de la zone recadree en PNG
-- **Gestion de configuration** : Sauvegarde et chargement de l'etat de la perspective (JSON)
-- **Historique des commandes** : Annulation (Ctrl+Z) et retablissement (Ctrl+Y) des actions
-- **Instantanes (Snapshots)** : Sauvegarde et restauration de configurations via le patron Memento
+- **Importation d'images** : Support des formats PNG, JPG et GIF avec chargement dynamique des dimensions
+- **Zoom interactif** : Agrandissement et réduction de la zone visible via la molette de souris (+ Ctrl), gestes tactiles (pinch-to-zoom) ou boutons dédiés
+- **Translation fluide** : Déplacement de la zone visible par glisser-déposer avec la souris ou via les boutons directionnels
+- **Sauvegarde d'image** : Export de la zone recadrée aux formats PNG, JPG ou BMP
+- **Gestion de configuration** : Sauvegarde et chargement de l'état de la perspective au format JSON
+- **Historique des commandes** : Annulation (Ctrl+Z) et rétablissement (Ctrl+Y) illimités des actions
+- **Instantanés (Snapshots)** : Sauvegarde et restauration de configurations via le patron Memento avec horodatage
+- **Miniature en temps réel** : Prévisualisation de la zone qui sera sauvegardée
 
 ## Architecture
 
-L'application suit le patron architectural **MVC** (Modele-Vue-Controleur) et integre les patrons de conception suivants :
+L'application suit le patron architectural **MVC** (Modèle-Vue-Contrôleur) et intègre les patrons de conception suivants :
 
-| Patron | Utilisation |
-|--------|-------------|
-| **Observer** | Notification automatique des vues lors des changements d'etat de l'image ou de la perspective |
-| **Command** | Encapsulation des actions (zoom, translation, import, etc.) pour permettre l'annulation |
-| **Memento** | Sauvegarde et restauration de l'etat de l'editeur |
-| **Iterator** | Parcours de l'historique des commandes |
-| **Singleton** | Instance unique du gestionnaire (Manager) et de l'invocateur (Invoker) |
+| Patron        | Utilisation                                                                                                                                                                 |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Observer**  | Notification automatique des vues lors des changements d'état de l'image ou de la perspective. Les contrôleurs s'abonnent aux modèles pour recevoir les mises à jour.       |
+| **Command**   | Encapsulation des actions (zoom, translation, import, etc.) en objets pour permettre l'annulation et le rétablissement. Chaque commande implémente `execute()` et `undo()`. |
+| **Memento**   | Sauvegarde et restauration de l'état de l'éditeur sans violer l'encapsulation. Permet de créer des instantanés de la configuration courante.                                |
+| **Iterator**  | Parcours bidirectionnel de l'historique des commandes pour les opérations Undo/Redo.                                                                                        |
+| **Singleton** | Instance unique du gestionnaire (`Manager`) et de l'invocateur (`Invoker`) pour centraliser la logique métier.                                                              |
+
+### Diagramme de classes simplifié
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                    App                                       │
+│                            (Point d'entrée JavaFX)                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          ▼                           ▼                           ▼
+   ┌─────────────┐           ┌─────────────────┐          ┌──────────────┐
+   │  HomeView   │           │   EditorView    │          │ ThumbnailView│
+   └─────────────┘           └─────────────────┘          └──────────────┘
+          │                           │                           │
+          ▼                           ▼                           ▼
+   ┌─────────────┐           ┌─────────────────┐          ┌──────────────┐
+   │HomeController│          │EditorController │          │ThumbnailCtrl │
+   └─────────────┘           └─────────────────┘          └──────────────┘
+                                      │
+                                      ▼
+                              ┌───────────────┐
+                              │    Invoker    │◄──────── Command Pattern
+                              └───────────────┘
+                                      │
+                                      ▼
+                              ┌───────────────┐
+                              │    Manager    │◄──────── Singleton
+                              └───────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    ▼                 ▼                 ▼
+             ┌───────────┐    ┌─────────────┐   ┌──────────────┐
+             │  Editor   │    │CommandHistory│   │MementoHistory│
+             └───────────┘    └─────────────┘   └──────────────┘
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+   ┌─────────────┐     ┌─────────────┐
+   │    Image    │     │ Perspective │◄──────── Observer Pattern
+   │ (Observable)│     │ (Observable)│
+   └─────────────┘     └─────────────┘
+```
 
 ### Structure du projet
 
@@ -36,50 +80,59 @@ image-viewer/
 │   ├── module-info.java
 │   └── ca/ets/log121/labo5/imageviewer/
 │       ├── App.java                    # Application JavaFX principale
-│       ├── Launcher.java               # Point d'entree
-│       ├── controller/                 # Controleurs MVC
-│       │   ├── EditorController.java
-│       │   ├── HomeController.java
-│       │   ├── ThumbnailController.java
-│       │   └── Invoker.java            # Patron Command
-│       ├── model/                      # Modeles de donnees
-│       │   ├── Manager.java            # Singleton principal
-│       │   ├── Editor.java
-│       │   ├── CommandHistory.java
+│       ├── Launcher.java               # Point d'entrée (résout les problèmes de modules)
+│       ├── controller/                 # Contrôleurs MVC
+│       │   ├── EditorController.java   # Gestion des actions d'édition
+│       │   ├── HomeController.java     # Gestion de l'écran d'accueil
+│       │   ├── ThumbnailController.java# Gestion de la miniature
+│       │   └── Invoker.java            # Exécution des commandes (Singleton)
+│       ├── model/                      # Modèles de données
+│       │   ├── Manager.java            # Gestionnaire principal (Singleton)
+│       │   ├── Editor.java             # État de l'éditeur
+│       │   ├── CommandHistory.java     # Historique pour Undo/Redo
 │       │   ├── memento/                # Patron Memento
-│       │   │   ├── Memento.java
-│       │   │   ├── EditorMemento.java
-│       │   │   └── MementoHistory.java
+│       │   │   ├── Memento.java        # Interface marqueur
+│       │   │   ├── EditorMemento.java  # Sauvegarde de l'état
+│       │   │   └── MementoHistory.java # Stockage des instantanés
 │       │   └── observer/               # Patron Observer
-│       │       ├── Observable.java
-│       │       ├── Observer.java
-│       │       ├── Image.java
-│       │       └── Perspective.java
+│       │       ├── Observable.java     # Interface sujet
+│       │       ├── Observer.java       # Interface observateur
+│       │       ├── Image.java          # Données de l'image
+│       │       └── Perspective.java    # Zoom et position
 │       ├── tools/
 │       │   ├── command/                # Commandes (Patron Command)
-│       │   │   ├── Command.java
-│       │   │   ├── ZoomCommand.java
-│       │   │   ├── TranslateCommand.java
-│       │   │   └── ...
+│       │   │   ├── Command.java        # Interface commune
+│       │   │   ├── ZoomCommand.java    # Commande de zoom
+│       │   │   ├── TranslateCommand.java# Commande de translation
+│       │   │   ├── UndoCommand.java    # Annulation
+│       │   │   ├── RedoCommand.java    # Rétablissement
+│       │   │   ├── ImportImageCommand.java
+│       │   │   ├── SaveImageCommand.java
+│       │   │   ├── SaveConfigFileCommand.java
+│       │   │   └── LoadConfigFileCommand.java
 │       │   └── iterator/               # Patron Iterator
-│       │       ├── Iterator.java
+│       │       ├── Iterator.java       # Interface bidirectionnelle
 │       │       └── CommandHistoryIterator.java
 │       └── view/                       # Vues JavaFX
-│           ├── HomeView.java
-│           ├── EditorView.java
-│           └── ThumbnailView.java
+│           ├── HomeView.java           # Écran d'accueil
+│           ├── EditorView.java         # Éditeur principal
+│           └── ThumbnailView.java      # Miniature de prévisualisation
 └── src/main/resources/                 # Fichiers FXML
+    └── ca/ets/log121/labo5/imageviewer/
+        ├── home-view.fxml
+        ├── editor-view.fxml
+        └── thumbnail-view.fxml
 ```
 
-## Prerequis
+## Prérequis
 
-- **Java** 21 ou superieur
-- **Maven** 3.6 ou superieur
-- **JavaFX** 21 (gere automatiquement par Maven)
+- **Java** 21 ou supérieur (JDK)
+- **Maven** 3.6 ou supérieur
+- **JavaFX** 21 (géré automatiquement par Maven)
 
-## Installation et execution
+## Installation et exécution
 
-### Cloner le depot
+### Cloner le dépôt
 
 ```bash
 git clone https://github.com/vladildev/log121-labo5.git
@@ -92,44 +145,77 @@ cd log121-labo5/image-viewer
 mvn clean compile
 ```
 
-### Executer l'application
+### Exécuter l'application
 
 ```bash
 mvn javafx:run
 ```
 
-### Generer la documentation Javadoc
+### Générer la documentation Javadoc
 
 ```bash
 mvn javadoc:javadoc
 ```
 
-La documentation sera generee dans `target/reports/apidocs/`.
+La documentation sera générée dans `target/reports/apidocs/index.html`.
+
+### Créer un JAR exécutable
+
+```bash
+mvn clean package
+```
 
 ## Utilisation
 
-1. **Ecran d'accueil** : Cliquez sur le bouton pour selectionner une image a editer
-2. **Editeur** :
-   - Utilisez la molette de la souris avec Ctrl pour zoomer
-   - Glissez-deposez pour deplacer la zone visible
-   - Utilisez les boutons de l'interface pour les actions
-   - Ctrl+Z pour annuler, Ctrl+Y pour retablir
-3. **Sauvegarde** : Exportez l'image recadree ou sauvegardez la configuration
+### 1. Écran d'accueil
 
-## Technologies utilisees
+Cliquez sur le bouton pour sélectionner une image à éditer depuis votre système de fichiers.
 
-- Java 21
-- JavaFX 21
-- Maven
-- FXML pour les interfaces
+### 2. Éditeur d'images
+
+- **Zoom** :
+  - Molette de souris + touche Ctrl
+  - Geste de pincement (écrans tactiles)
+  - Boutons + et - de l'interface
+- **Déplacement** :
+  - Glisser-déposer avec la souris sur le cadre
+  - Boutons directionnels de l'interface
+- **Raccourcis clavier** :
+  - `Ctrl+Z` : Annuler la dernière action
+  - `Ctrl+Y` : Rétablir l'action annulée
+
+### 3. Gestion des fichiers
+
+- **Importer une image** : Charger une nouvelle image (PNG, JPG, GIF)
+- **Sauvegarder l'image** : Exporter la zone recadrée
+- **Sauvegarder la configuration** : Enregistrer l'état actuel (zoom, position) en JSON
+- **Charger une configuration** : Restaurer un état précédemment sauvegardé
+
+### 4. Instantanés (Snapshots)
+
+- Créez des instantanés de votre configuration actuelle
+- Sélectionnez un instantané dans la liste déroulante pour le restaurer
+- Chaque instantané est horodaté pour faciliter l'identification
+
+## Technologies utilisées
+
+| Technologie | Version | Description                           |
+| ----------- | ------- | ------------------------------------- |
+| Java        | 21      | Langage de programmation principal    |
+| JavaFX      | 21      | Framework d'interface graphique       |
+| Maven       | 3.6+    | Gestion des dépendances et build      |
+| FXML        | -       | Définition déclarative des interfaces |
 
 ## Auteurs
 
-Projet realise par :
-- @vladildev
-- @macanec
-- @loucasbrl
+Projet réalisé par :
 
-Cours LOG121 - Conception orientee objet  
-Ecole de technologie superieure (ETS)  
+- [@vladildev](https://github.com/vladildev)
+- [@macanec](https://github.com/macanec)
+- [@loucasbrl](https://github.com/loucasbrl)
+
+---
+
+**Cours LOG121** - Conception orientée objet  
+École de technologie supérieure (ÉTS)  
 Session Automne 2025
