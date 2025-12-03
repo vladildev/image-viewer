@@ -4,18 +4,17 @@ Application JavaFX de visualisation et d'édition d'images développée dans le 
 
 ## Description
 
-Image Viewer est un logiciel de bureau permettant de visualiser, éditer et manipuler des images avec des fonctionnalités avancées de zoom, translation et recadrage. L'application met en œuvre plusieurs patrons de conception (design patterns) étudiés dans le cours, démontrant les bonnes pratiques de génie logiciel.
+Image Viewer est un logiciel permettant de visualiser, éditer et manipuler des images avec des fonctionnalités de zoom, translation et recadrage. L'application met en œuvre plusieurs patrons de conception (design patterns) étudiés dans le cours.
 
 ### Fonctionnalités
 
 - **Importation d'images** : Support des formats PNG, JPG et GIF avec chargement dynamique des dimensions
-- **Zoom interactif** : Agrandissement et réduction de la zone visible via la molette de souris (+ Ctrl), gestes tactiles (pinch-to-zoom) ou boutons dédiés
-- **Translation fluide** : Déplacement de la zone visible par glisser-déposer avec la souris ou via les boutons directionnels
+- **Zoom** : Agrandissement et réduction de la zone visible via la molette de souris (+ Ctrl), gestes tactiles (pinch-to-zoom) ou boutons dédiés
+- **Translation** : Déplacement de la zone visible par glisser-déposer avec la souris ou via les boutons directionnels
 - **Sauvegarde d'image** : Export de la zone recadrée aux formats PNG, JPG ou BMP
-- **Gestion de configuration** : Sauvegarde et chargement de l'état de la perspective au format JSON
 - **Historique des commandes** : Annulation (Ctrl+Z) et rétablissement (Ctrl+Y) illimités des actions
 - **Instantanés (Snapshots)** : Sauvegarde et restauration de configurations via le patron Memento avec horodatage
-- **Miniature en temps réel** : Prévisualisation de la zone qui sera sauvegardée
+- **Miniature** : Prévisualisation de la zone qui sera sauvegardée
 
 ## Architecture
 
@@ -33,7 +32,7 @@ L'application suit le patron architectural **MVC** (Modèle-Vue-Contrôleur) et 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                                    App                                       │
+│                                    App                                      │
 │                            (Point d'entrée JavaFX)                          │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
@@ -60,9 +59,9 @@ L'application suit le patron architectural **MVC** (Modèle-Vue-Contrôleur) et 
                                       │
                     ┌─────────────────┼─────────────────┐
                     ▼                 ▼                 ▼
-             ┌───────────┐    ┌─────────────┐   ┌──────────────┐
+             ┌───────────┐    ┌──────────────┐   ┌──────────────┐
              │  Editor   │    │CommandHistory│   │MementoHistory│
-             └───────────┘    └─────────────┘   └──────────────┘
+             └───────────┘    └──────────────┘   └──────────────┘
                     │
           ┌─────────┴─────────┐
           ▼                   ▼
