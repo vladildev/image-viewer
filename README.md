@@ -134,8 +134,8 @@ image-viewer/
 ### Cloner le dépôt
 
 ```bash
-git clone https://github.com/vladildev/log121-labo5.git
-cd log121-labo5/image-viewer
+git clone https://github.com/vladildev/image-viewer.git
+cd image-viewer
 ```
 
 ### Compiler le projet
