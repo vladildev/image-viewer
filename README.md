@@ -16,6 +16,10 @@ Image Viewer est un logiciel permettant de visualiser, éditer et manipuler des 
 - **Instantanés (Snapshots)** : Sauvegarde et restauration de configurations via le patron Memento avec horodatage
 - **Miniature** : Prévisualisation de la zone qui sera sauvegardée
 
+## Aperçu
+
+![Capture d'écran de l'application](screenshots/app-screenshot.png)
+
 ## Architecture
 
 L'application suit le patron architectural **MVC** (Modèle-Vue-Contrôleur) et intègre les patrons de conception suivants :
@@ -77,7 +81,7 @@ L'application suit le patron architectural **MVC** (Modèle-Vue-Contrôleur) et 
 image-viewer/
 ├── src/main/java/
 │   ├── module-info.java
-│   └── ca/ets/log121/labo5/imageviewer/
+│   └── com/imageviewer/
 │       ├── App.java                    # Application JavaFX principale
 │       ├── Launcher.java               # Point d'entrée (résout les problèmes de modules)
 │       ├── controller/                 # Contrôleurs MVC
@@ -117,7 +121,7 @@ image-viewer/
 │           ├── EditorView.java         # Éditeur principal
 │           └── ThumbnailView.java      # Miniature de prévisualisation
 └── src/main/resources/                 # Fichiers FXML
-    └── ca/ets/log121/labo5/imageviewer/
+    └── com/imageviewer/
         ├── home-view.fxml
         ├── editor-view.fxml
         └── thumbnail-view.fxml
